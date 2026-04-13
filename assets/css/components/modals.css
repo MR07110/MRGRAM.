@@ -1,0 +1,158 @@
+/* assets/css/components/modals.css */
+/* 📏 ~65 qator */
+/* Modal oynalar - base, alert, confirm, sheet */
+
+/* ========== ASOSIY MODAL ========== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 40000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-card {
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    border-radius: 28px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 320px;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background: rgba(255, 59, 48, 0.1);
+    color: var(--neon-red);
+}
+
+.modal-body {
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ========== MODAL INPUT ========== */
+.modal-input {
+    width: 100%;
+    background: #1c1c1e;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ========== ALERT MODAL ========== */
+.modal-alert .modal-card {
+    max-width: 300px;
+    text-align: center;
+}
+
+.modal-alert .modal-body {
+    font-size: 15px;
+}
+
+/* ========== CONFIRM MODAL ========== */
+.modal-confirm .modal-footer {
+    justify-content: center;
+}
+
+.modal-confirm .btn {
+    min-width: 100px;
+}
+
+/* ========== SHEET MODAL (pastdan chiqadigan) ========== */
+.modal-sheet {
+    align-items: flex-end;
+}
+
+.modal-sheet .modal-card {
+    max-width: 100%;
+    border-radius: 28px 28px 0 0;
+    animation: slideUp 0.3s ease;
+}
+
+/* ========== VAULT MODAL ========== */
+.vault-modal {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 100000;
+}
+
+.vault-modal .modal-card {
+    background: #1c1c1e;
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.vault-pin-input {
+    width: 100%;
+    padding: 14px;
+    background: #2c2c2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 8px;
+    font-family: var(--font-mono);
+}
+
+/* ========== MODAL OVERLAY ========== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 29999;
+    display: none;
+}
+
+.modal-overlay.active {
+    display: block;
+}

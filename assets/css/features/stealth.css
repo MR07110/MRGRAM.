@@ -1,0 +1,147 @@
+/* assets/css/features/stealth.css */
+/* 📏 ~45 qator */
+/* Stealth mode - yashirin rejim stillari */
+
+/* ========== STEALTH MODE BODY ========== */
+body.stealth-mode .sidebar,
+body.stealth-mode .sidebar-overlay,
+body.stealth-mode .fab-container,
+body.stealth-mode .header .header-left .menu-btn,
+body.stealth-mode .header .header-right .search-btn,
+body.stealth-mode .header .header-right .settings-btn {
+    display: none !important;
+}
+
+body.stealth-mode .header {
+    justify-content: center !important;
+}
+
+body.stealth-mode .chat-header .chat-actions {
+    opacity: 0.5;
+}
+
+body.stealth-mode #chatView {
+    transition: all 0.3s ease;
+}
+
+/* ========== STEALTH CHAT HEADER ========== */
+.stealth-chat-header .chat-username {
+    display: none !important;
+}
+
+/* ========== STEALTH BADGE ========== */
+.stealth-badge {
+    background: rgba(0, 210, 255, 0.2);
+    color: var(--neon-cyan);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* ========== STEALTH INDICATOR ========== */
+.stealth-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 210, 255, 0.2);
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    color: var(--neon-cyan);
+    z-index: 10001;
+    backdrop-filter: blur(10px);
+    pointer-events: none;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+}
+
+/* ========== STEALTH LOCK ICON ========== */
+svg.lock-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.stealth-lock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+}
+
+/* ========== STEALTH INPUT BAR ========== */
+body.stealth-mode .input-bar {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+body.stealth-mode .msg-field {
+    background: #0a0a0a;
+}
+
+/* ========== STEALTH MESSAGE ========== */
+.stealth-message {
+    position: relative;
+}
+
+.stealth-message::after {
+    content: "🔒";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+/* ========== STEALTH WATERMARK ========== */
+.stealth-watermark {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.1);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* ========== STEALTH ANIMATION ========== */
+@keyframes stealthPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.stealth-indicator {
+    animation: stealthPulse 2s infinite;
+}
+
+/* ========== STEALTH MODE TRANSITION ========== */
+.stealth-transition {
+    transition: all 0.3s ease;
+}
+
+/* ========== STEALTH HIDE ========== */
+.stealth-hide {
+    display: none !important;
+}
+
+.stealth-show {
+    display: flex !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .stealth-indicator {
+        top: 5px;
+        right: 5px;
+        font-size: 8px;
+        padding: 2px 6px;
+    }
+    
+    .stealth-badge {
+        font-size: 8px;
+        padding: 1px 4px;
+    }
+}

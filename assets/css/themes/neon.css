@@ -1,0 +1,59 @@
+/* assets/css/themes/neon.css */
+/* 📏 ~30 qator */
+/* Neon theme - cyberpunk uslubi */
+
+[data-theme="neon"],
+.theme-neon {
+    /* Asosiy ranglar - to'q cyberpunk fon */
+    --bg: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-elevated: #1a1a2e;
+    
+    /* Glassmorphism - shaffof neon */
+    --card: rgba(20, 20, 40, 0.8);
+    --glass-bg: rgba(15, 15, 30, 0.7);
+    --glass-border: rgba(0, 210, 255, 0.2);
+    --border: rgba(157, 0, 255, 0.2);
+    
+    /* Matn ranglari - neon oq */
+    --text: #e0e0ff;
+    --text-secondary: rgba(224, 224, 255, 0.7);
+    --text-tertiary: rgba(224, 224, 255, 0.4);
+    --sub: rgba(0, 210, 255, 0.3);
+    
+    /* Xabar ranglari */
+    --msg-me: linear-gradient(135deg, #00d2ff, #9d00ff);
+    --msg-them: rgba(157, 0, 255, 0.2);
+    
+    /* Soyalar - neon glow */
+    --shadow-sm: 0 0 10px rgba(0, 210, 255, 0.3);
+    --shadow-md: 0 0 20px rgba(157, 0, 255, 0.3);
+    --shadow-lg: 0 0 40px rgba(0, 210, 255, 0.2);
+    
+    /* Input fon */
+    --input-bg: #1a1a2e;
+    --input-border: rgba(0, 210, 255, 0.3);
+    
+    /* Aksent rang */
+    --accent: #00d2ff;
+    --accent-dark: #9d00ff;
+    --accent-glow: rgba(0, 210, 255, 0.5);
+    
+    /* Neon ranglar - maksimal yorqinlik */
+    --neon-cyan: #00ffff;
+    --neon-purple: #bf00ff;
+    --neon-pink: #ff00cc;
+    --neon-green: #00ffaa;
+    --neon-blue: #0088ff;
+    --neon-red: #ff0044;
+    
+    /* Glow effektlar - kuchli */
+    --glow-cyan: 0 0 20px #00ffff, 0 0 40px rgba(0, 255, 255, 0.5);
+    --glow-purple: 0 0 20px #bf00ff, 0 0 40px rgba(191, 0, 255, 0.5);
+    --glow-pink: 0 0 20px #ff00cc;
+    --glow-accent: 0 0 20px #00d2ff, 0 0 40px rgba(0, 210, 255, 0.5);
+    
+    /* Online/Offline */
+    --online: #00ffaa;
+    --offline: #444466;
+}

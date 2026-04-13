@@ -1,0 +1,90 @@
+<!-- html/call.html -->
+<!-- Call sahifasi interfeysi -->
+
+<!-- Call Container -->
+<div id="callContainer" class="call-container">
+    <!-- Remote Video -->
+    <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+    
+    <!-- Local Video -->
+    <video id="localVideo" class="local-video" autoplay playsinline muted></video>
+    
+    <!-- Call Info -->
+    <div class="call-info">
+        <img id="callTargetAvatar" class="call-avatar" src="" alt="Avatar">
+        <div id="callTargetName" class="call-name"></div>
+        <div id="callStatusText" class="call-status">Kutilmoqda...</div>
+        <div id="callDuration" class="call-duration">00:00</div>
+    </div>
+    
+    <!-- Call Controls -->
+    <div class="call-controls">
+        <button id="toggleMicBtn" class="call-control-btn">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+            </svg>
+        </button>
+        
+        <button id="toggleVideoBtn" class="call-control-btn">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="6" width="15" height="12" rx="2"/>
+                <path d="M22 8l-5 4 5 4V8z"/>
+            </svg>
+        </button>
+        
+        <button id="toggleSpeakerBtn" class="call-control-btn">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+        </button>
+        
+        <button id="switchCameraBtn" class="call-control-btn">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M23 7v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M2 7h20"/>
+            </svg>
+        </button>
+        
+        <button id="screenshotBtn" class="call-control-btn">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <circle cx="8.5" cy="10.5" r="1.5"/>
+                <path d="M21 15l-5-5L8 18"/>
+            </svg>
+        </button>
+        
+        <button id="endCallBtn" class="call-control-btn end-call">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M10.68 13.31a16 16 0 0 0 2.41 2.41l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.86.57 2.82.7A2 2 0 0 1 21 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8 10"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- Incoming Call Modal -->
+<div id="incomingCallDiv" class="incoming-call-modal">
+    <div class="incoming-call-card">
+        <div class="incoming-call-info">
+            <img id="incomingCallAvatar" class="incoming-call-avatar" src="" alt="Avatar">
+            <div id="incomingCallName" class="incoming-call-name">Qo'ng'iroq...</div>
+            <div class="incoming-call-type">🎥 Video qo'ng'iroq</div>
+        </div>
+        
+        <div class="incoming-call-actions">
+            <button id="acceptCallBtn" class="accept-call-btn">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 10a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+            </button>
+            
+            <button id="rejectCallBtn" class="reject-call-btn">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="2">
+                    <path d="M10.68 13.31a16 16 0 0 0 2.41 2.41l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.86.57 2.82.7A2 2 0 0 1 21 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8 10"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>

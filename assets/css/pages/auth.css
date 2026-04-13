@@ -1,0 +1,177 @@
+/* assets/css/pages/auth.css */
+/* 📏 ~55 qator */
+/* Auth sahifasi - Login va Register */
+
+/* ========== AUTH PAGE ========== */
+#authPage {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+/* ========== AUTH CARD ========== */
+.auth-card {
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    border-radius: 28px;
+    padding: 32px 24px;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 360px;
+    animation: slideUp 0.4s ease;
+}
+
+/* ========== AUTH LOGO ========== */
+.auth-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.auth-logo svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(var(--glow-cyan));
+    animation: neonPulse 3s infinite;
+}
+
+/* ========== AUTH TITLE ========== */
+.auth-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+/* ========== AUTH FORM ========== */
+.auth-input-group {
+    margin-bottom: 16px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 16px 18px;
+    background: #1c1c1e;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md);
+    color: var(--text);
+    font-size: 16px;
+    transition: all var(--transition-normal);
+}
+
+.auth-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.auth-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* ========== AUTH BUTTON ========== */
+.auth-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    border-radius: var(--border-radius-md);
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.auth-btn:hover {
+    box-shadow: var(--glow-accent);
+    transform: translateY(-2px);
+}
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+/* ========== AUTH SWITCH ========== */
+.auth-switch {
+    text-align: center;
+    margin-top: 24px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.auth-switch span {
+    color: var(--neon-cyan);
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 8px;
+    transition: all var(--transition-fast);
+}
+
+.auth-switch span:hover {
+    text-decoration: underline;
+    text-shadow: var(--glow-cyan);
+}
+
+/* ========== AVATAR UPLOAD ========== */
+.auth-avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.avatar-upload {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: var(--glow-accent);
+    overflow: hidden;
+}
+
+.avatar-upload:hover {
+    transform: scale(1.05);
+    border-color: var(--neon-purple);
+}
+
+.avatar-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-upload svg {
+    width: 50px;
+    height: 50px;
+    opacity: 0.6;
+}
+
+/* ========== DEMO HINT ========== */
+.auth-demo {
+    text-align: center;
+    margin-top: 16px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+}

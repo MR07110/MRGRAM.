@@ -1,0 +1,158 @@
+/* assets/css/components/buttons.css */
+/* 📏 ~65 qator */
+/* Barcha tugma stillari */
+
+/* ========== ASOSIY TUGMALAR ========== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-primary:hover {
+    box-shadow: var(--glow-accent);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+}
+
+.btn-secondary:hover {
+    background: rgba(13, 137, 253, 0.1);
+    box-shadow: var(--glow-accent);
+}
+
+.btn-danger {
+    background: var(--neon-red);
+    color: white;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 15px var(--neon-red);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+}
+
+/* ========== IKONKA TUGMALAR ========== */
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: rgba(0, 210, 255, 0.1);
+    border-color: var(--neon-cyan);
+}
+
+.btn-icon-sm {
+    width: 36px;
+    height: 36px;
+}
+
+.btn-icon-lg {
+    width: 52px;
+    height: 52px;
+}
+
+/* ========== FAB TUGMA ========== */
+.fab-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--glow-accent);
+    transition: all var(--transition-normal);
+}
+
+.fab-btn:active {
+    transform: scale(0.92);
+    box-shadow: 0 0 25px rgba(13, 137, 253, 0.8);
+}
+
+.fab-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ========== NEON TUGMA ========== */
+.btn-neon {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+.btn-neon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    opacity: 0;
+    z-index: -1;
+    transition: opacity var(--transition-normal);
+}
+
+.btn-neon:hover {
+    color: white;
+    border-color: transparent;
+}
+
+.btn-neon:hover::after {
+    opacity: 1;
+}
+
+/* ========== TO'LIQ KENGLIKDAGI TUGMA ========== */
+.btn-block {
+    width: 100%;
+}
+
+/* ========== O'CHIRILGAN TUGMA ========== */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

@@ -1,0 +1,96 @@
+/* assets/css/components/tabs.css */
+/* 📏 ~40 qator */
+/* Tablar - Chatlar, Guruhlar, Kanallar uchun */
+
+/* ========== TABS CONTAINER ========== */
+.tabs {
+    display: flex;
+    background: #1c1c1e;
+    margin: 10px 20px;
+    border-radius: 14px;
+    padding: 3px;
+    position: relative;
+}
+
+/* ========== TAB ITEM ========== */
+.tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 2;
+    color: var(--sub);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: color var(--transition-fast);
+    border-radius: 11px;
+}
+
+.tab:hover {
+    color: var(--text-secondary);
+}
+
+.tab.active {
+    color: var(--text);
+}
+
+.tab svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* ========== TAB INDICATOR ========== */
+.tab-indicator {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    bottom: 3px;
+    width: calc(33.33% - 3px);
+    background: #3a3a3c;
+    border-radius: 11px;
+    transition: 0.25s cubic-bezier(0.2, 1, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== TAB CONTENT ========== */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .tabs {
+        margin: 10px 12px;
+    }
+    
+    .tab {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs {
+        margin: 8px 12px;
+    }
+    
+    .tab {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .tab svg {
+        width: 12px;
+        height: 12px;
+    }
+}

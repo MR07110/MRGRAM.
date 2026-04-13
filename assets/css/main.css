@@ -1,0 +1,48 @@
+/* assets/css/main.css */
+/* 📏 ~35 qator */
+/* Asosiy CSS - barcha fayllarni import qiladi */
+
+/* ========== BASE ========== */
+@import url('./base/variables.css');
+@import url('./base/reset.css');
+@import url('./base/animations.css');
+@import url('./base/typography.css');
+
+/* ========== LAYOUT ========== */
+@import url('./layout/containers.css');
+@import url('./layout/grid.css');
+@import url('./layout/flex.css');
+@import url('./layout/spacing.css');
+
+/* ========== COMPONENTS ========== */
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/modals.css');
+@import url('./components/forms.css');
+@import url('./components/sidebar.css');
+@import url('./components/header.css');
+@import url('./components/tabs.css');
+@import url('./components/fab.css');
+@import url('./components/toast.css');
+@import url('./components/loader.css');
+
+/* ========== PAGES ========== */
+@import url('./pages/auth.css');
+@import url('./pages/chat.css');
+@import url('./pages/call.css');
+@import url('./pages/contacts.css');
+@import url('./pages/settings.css');
+@import url('./pages/search.css');
+
+/* ========== FEATURES ========== */
+@import url('./features/voice.css');
+@import url('./features/messages.css');
+@import url('./features/vault.css');
+@import url('./features/stealth.css');
+@import url('./features/media-viewer.css');
+@import url('./features/file-uploader.css');
+
+/* ========== THEMES ========== */
+@import url('./themes/dark.css');
+@import url('./themes/light.css');
+@import url('./themes/neon.css');

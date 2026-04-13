@@ -1,0 +1,222 @@
+/* assets/css/pages/search.css */
+/* 📏 ~55 qator */
+/* Search sahifasi - qidiruv */
+
+/* ========== SEARCH PAGE ========== */
+.search-page {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 30000;
+    display: none;
+    flex-direction: column;
+}
+
+/* ========== SEARCH HEADER ========== */
+.search-header {
+    padding: 55px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+
+.search-back-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-back-btn:active {
+    transform: scale(0.95);
+}
+
+.search-input-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #1c1c1e;
+    border-radius: 32px;
+    padding: 8px 16px;
+    gap: 10px;
+}
+
+.search-input-container svg {
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
+}
+
+.search-input-container input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+}
+
+.search-input-container input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* ========== SEARCH RESULTS ========== */
+.search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* ========== SEARCH HINT & EMPTY ========== */
+.search-hint,
+.search-empty {
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: 40px 20px;
+    font-size: 14px;
+}
+
+.search-hint svg,
+.search-empty svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* ========== SEARCH USER CARD ========== */
+.search-user-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--card);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    backdrop-filter: var(--glass);
+}
+
+.search-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #2c2c2e;
+}
+
+.search-avatar-img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.search-avatar-initial {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+.search-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-user-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+}
+
+.search-user-username {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.search-add-btn {
+    background: var(--accent);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 24px;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s;
+}
+
+.search-add-btn:active {
+    transform: scale(0.95);
+}
+
+.search-add-btn:disabled {
+    opacity: 0.6;
+    transform: none;
+}
+
+/* ========== SEARCH FILTER ========== */
+.search-filters {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.search-filter-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #1c1c1e;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.search-filter-btn.active {
+    background: var(--accent);
+    color: white;
+}
+
+.search-filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .search-header {
+        padding: 50px 16px 12px;
+    }
+    
+    .search-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .search-avatar-img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .search-add-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
