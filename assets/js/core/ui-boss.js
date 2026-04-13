@@ -1,5 +1,5 @@
 // assets/js/core/ui-boss.js
-// 📏 ~80 qator
+// 📏 ~100 qator
 // UI Boss - Interfeys boshqaruvi
 
 import eventBus from './event-bus.js';
@@ -32,6 +32,23 @@ class UIBoss {
         console.log('✅ UI Boss tayyor');
         
         eventBus.emit(UI_EVENTS.READY);
+        
+        // ========== SAHIFANI OCHISH (ONBOARDING BILAN) ==========
+        setTimeout(() => {
+            const savedUser = localStorage.getItem('mrgram_user');
+            const onboardingCompleted = localStorage.getItem('onboarding_completed');
+            
+            if (!savedUser) {
+                // Yangi foydalanuvchi - Onboarding ni ochish
+                this.openPage({ id: 'onboardingPage' });
+            } else if (savedUser && onboardingCompleted !== 'true') {
+                // Onboarding tugallanmagan
+                this.openPage({ id: 'onboardingPage' });
+            } else {
+                // Oddiy foydalanuvchi - Main App
+                this.openPage({ id: 'mainApp' });
+            }
+        }, 100);
     }
 
     setupEventListeners() {
@@ -67,6 +84,13 @@ class UIBoss {
         
         page.style.display = 'flex';
         this.currentPage = id;
+        
+        // Onboarding uchun body klass
+        if (id === 'onboardingPage') {
+            document.body.classList.add('onboarding-active');
+        } else {
+            document.body.classList.remove('onboarding-active');
+        }
         
         eventBus.emit(UI_EVENTS.PAGE_OPENED, { pageId: id, data });
         console.log(`📄 Sahifa ochildi: ${id}`);
@@ -186,7 +210,7 @@ class UIBoss {
     }
 
     changeTheme({ theme }) {
-        const validThemes = ['dark', 'light', 'neon'];
+        const validThemes = ['dark', 'light'];
         if (!validThemes.includes(theme)) return;
         
         document.body.classList.remove(`theme-${this.theme}`);

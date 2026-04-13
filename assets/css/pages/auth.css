@@ -1,5 +1,5 @@
 /* assets/css/pages/auth.css */
-/* 📏 ~55 qator */
+/* 📏 ~70 qator */
 /* Auth sahifasi - Login va Register */
 
 /* ========== AUTH PAGE ========== */
@@ -116,17 +116,30 @@
     font-size: 14px;
 }
 
-.auth-switch span {
-    color: var(--neon-cyan);
-    cursor: pointer;
-    font-weight: 600;
-    margin-left: 8px;
-    transition: all var(--transition-fast);
+.auth-switch span:first-child {
+    color: var(--text-secondary) !important;
+    cursor: default !important;
+    font-weight: 400 !important;
+    text-decoration: none !important;
+    margin-left: 0 !important;
 }
 
-.auth-switch span:hover {
-    text-decoration: underline;
-    text-shadow: var(--glow-cyan);
+.auth-switch span:first-child:hover {
+    text-decoration: none !important;
+    text-shadow: none !important;
+}
+
+.auth-switch span:last-child {
+    color: var(--neon-cyan) !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    margin-left: 8px !important;
+    transition: all var(--transition-fast) !important;
+}
+
+.auth-switch span:last-child:hover {
+    text-decoration: underline !important;
+    text-shadow: var(--glow-cyan) !important;
 }
 
 /* ========== AVATAR UPLOAD ========== */

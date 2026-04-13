@@ -1,58 +1,58 @@
 /* assets/css/base/variables.css */
-/* 📏 ~50 qator */
-/* Barcha CSS o'zgaruvchilar - Neon Cyberpunk & Glassmorphism */
+/* 📏 ~60 qator */
+/* Barcha CSS o'zgaruvchilar - Sky Blue & Dark Gray Professional */
 
 :root {
-    /* ========== ASOSIY RANGLAR ========== */
-    --bg: #0b0d11;
-    --bg-secondary: #151921;
-    --bg-elevated: #1a1f2a;
+    /* ========== DARK MODE - ASOSIY FON RANGLARI ========== */
+    --bg: #121212;
+    --bg-secondary: #1a1a1a;
+    --bg-elevated: #242424;
     
-    /* ========== NEON RANGLAR ========== */
-    --neon-cyan: #00d2ff;
-    --neon-purple: #9d00ff;
-    --neon-pink: #ff00aa;
-    --neon-green: #00ff88;
-    --neon-blue: #0088ff;
-    --neon-red: #ff2a2a;
-    
-    /* ========== AKSENT RANG ========== */
-    --accent: #0d89fd;
-    --accent-dark: #0077e6;
-    --accent-glow: rgba(13, 137, 253, 0.3);
+    /* ========== AKSENT RANG - SKY BLUE ========== */
+    --accent: #0088cc;
+    --accent-light: #34b7f1;
+    --accent-dark: #006699;
+    --accent-glow: rgba(0, 136, 204, 0.25);
     
     /* ========== GLASSMORPHISM ========== */
-    --card: rgba(28, 28, 30, 0.7);
-    --glass-bg: rgba(23, 28, 38, 0.7);
+    --card: rgba(36, 36, 36, 0.85);
+    --glass-bg: rgba(26, 26, 26, 0.8);
     --glass-border: rgba(255, 255, 255, 0.08);
     --border: rgba(255, 255, 255, 0.1);
-    --glass: blur(30px) saturate(200%);
-    --glass-blur: blur(25px) saturate(180%);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass: blur(20px) saturate(180%);
+    --glass-blur: blur(20px) saturate(180%);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     
-    /* ========== GLOW EFFEKTLAR ========== */
-    --glow-cyan: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px rgba(0, 210, 255, 0.3);
-    --glow-purple: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple);
-    --glow-pink: 0 0 15px var(--neon-pink);
-    --glow-accent: 0 0 15px rgba(13, 137, 253, 0.5);
+    /* ========== GLOW EFFEKTLAR (SKY BLUE) ========== */
+    --glow-accent: 0 0 12px rgba(0, 136, 204, 0.4);
+    --glow-light: 0 0 8px rgba(52, 183, 241, 0.3);
     
     /* ========== MATN RANGLARI ========== */
     --text: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.7);
-    --text-tertiary: rgba(255, 255, 255, 0.4);
-    --sub: rgba(255, 255, 255, 0.25);
+    --text-tertiary: rgba(255, 255, 255, 0.45);
+    --sub: rgba(255, 255, 255, 0.3);
     
     /* ========== XABAR RANGLARI ========== */
-    --msg-me: var(--accent);
-    --msg-them: #262629;
-    --online: #00ff88;
-    --offline: #6c757d;
+    --msg-me: #0088cc;
+    --msg-them: #2a2a2a;
+    
+    /* ========== HOLAT RANGLARI ========== */
+    --online: #4caf50;
+    --offline: #666666;
+    --error: #ff5252;
+    --warning: #ffa726;
+    --success: #4caf50;
+    
+    /* ========== INPUT ELEMENTLARI ========== */
+    --input-bg: #1e1e1e;
+    --input-border: rgba(255, 255, 255, 0.12);
     
     /* ========== O'LCHAMLAR ========== */
-    --border-radius-sm: 12px;
-    --border-radius-md: 16px;
-    --border-radius-lg: 24px;
-    --border-radius-xl: 32px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
     --border-radius-full: 9999px;
     
     /* ========== ANIMATSIYA ========== */
@@ -63,4 +63,51 @@
     /* ========== FONT ========== */
     --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ========== LIGHT MODE ========== */
+[data-theme="light"],
+.theme-light {
+    /* Asosiy fon ranglari */
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-elevated: #eeeeee;
+    
+    /* Aksent rang */
+    --accent: #0088cc;
+    --accent-light: #34b7f1;
+    --accent-dark: #006699;
+    --accent-glow: rgba(0, 136, 204, 0.15);
+    
+    /* Glassmorphism */
+    --card: rgba(255, 255, 255, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --border: rgba(0, 0, 0, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    
+    /* Glow effektlar */
+    --glow-accent: 0 0 12px rgba(0, 136, 204, 0.2);
+    --glow-light: 0 0 8px rgba(52, 183, 241, 0.15);
+    
+    /* Matn ranglari */
+    --text: #1a1a1a;
+    --text-secondary: rgba(0, 0, 0, 0.65);
+    --text-tertiary: rgba(0, 0, 0, 0.45);
+    --sub: rgba(0, 0, 0, 0.3);
+    
+    /* Xabar ranglari */
+    --msg-me: #0088cc;
+    --msg-them: #e8e8e8;
+    
+    /* Holat ranglari */
+    --online: #4caf50;
+    --offline: #999999;
+    --error: #e53935;
+    --warning: #f57c00;
+    --success: #4caf50;
+    
+    /* Input elementlari */
+    --input-bg: #f5f5f5;
+    --input-border: rgba(0, 0, 0, 0.1);
 }

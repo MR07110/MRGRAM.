@@ -1,5 +1,5 @@
 // assets/js/core/data-boss.js
-// 📏 ~70 qator
+// 📏 ~85 qator
 // Data Boss - Ma'lumotlar oqimi
 
 import eventBus from './event-bus.js';
@@ -112,23 +112,66 @@ class DataBoss {
         }
     }
 
+    // ========== BU YERDA O'ZGARISH BOR ==========
     async handleLogin({ email, password, requestId }) {
         try {
+            console.log('📧 LOGIN SO\'ROV:', email);
+            
             const user = await this.services.auth.login(email, password);
+            
+            console.log('✅ LOGIN MUVAFFAQIYATLI:', user.uid);
             eventBus.emit(`auth:login:${requestId}:success`, user);
             eventBus.emit(AUTH_EVENTS.STATE_CHANGED, { user, status: 'login' });
+            
         } catch (error) {
-            eventBus.emit(`auth:login:${requestId}:error`, error);
+            console.error('❌ LOGIN XATOLIK:', error.code);
+            
+            // Xatolik xabarlarini o'zbek tilida
+            const errorMessages = {
+                'auth/user-not-found': '❌ Bunday foydalanuvchi topilmadi. Ro\'yxatdan o\'ting.',
+                'auth/wrong-password': '❌ Parol noto\'g\'ri',
+                'auth/invalid-email': '❌ Email formati noto\'g\'ri',
+                'auth/invalid-credential': '❌ Username yoki parol xato',
+                'auth/network-request-failed': '❌ Internet aloqasi yo\'q',
+                'auth/too-many-requests': '❌ Juda ko\'p urinish. Keyinroq qayta urining.',
+                'auth/missing-email': '❌ Email kiritilmagan'
+            };
+            
+            const userMessage = errorMessages[error.code] || '❌ Kirishda xatolik yuz berdi';
+            
+            eventBus.emit(`auth:login:${requestId}:error`, { 
+                ...error, 
+                userMessage 
+            });
         }
     }
 
     async handleRegister({ email, password, userData, requestId }) {
         try {
+            console.log('📝 REGISTER SO\'ROV:', email);
+            
             const user = await this.services.auth.register(email, password, userData);
+            
+            console.log('✅ REGISTER MUVAFFAQIYATLI:', user.uid);
             eventBus.emit(`auth:register:${requestId}:success`, user);
             eventBus.emit(AUTH_EVENTS.STATE_CHANGED, { user, status: 'register' });
+            
         } catch (error) {
-            eventBus.emit(`auth:register:${requestId}:error`, error);
+            console.error('❌ REGISTER XATOLIK:', error.code);
+            
+            const errorMessages = {
+                'auth/email-already-in-use': '❌ Bu email allaqachon band',
+                'auth/weak-password': '❌ Parol juda kuchsiz (kamida 6 belgi)',
+                'auth/invalid-email': '❌ Email formati noto\'g\'ri',
+                'auth/network-request-failed': '❌ Internet aloqasi yo\'q'
+            };
+            
+            const userMessage = errorMessages[error.code] || '❌ Ro\'yxatdan o\'tishda xatolik';
+            
+            eventBus.emit(`auth:register:${requestId}:error`, { 
+                ...error, 
+                userMessage 
+            });
         }
     }
 
