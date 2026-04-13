@@ -1,5 +1,5 @@
 // assets/js/core/ui-boss.js
-// 📏 ~100 qator
+// 📏 ~105 qator
 // UI Boss - Interfeys boshqaruvi
 
 import eventBus from './event-bus.js';
@@ -33,19 +33,19 @@ class UIBoss {
         
         eventBus.emit(UI_EVENTS.READY);
         
-        // ========== SAHIFANI OCHISH (ONBOARDING BILAN) ==========
+        // ========== SAHIFANI OCHISH ==========
         setTimeout(() => {
             const savedUser = localStorage.getItem('mrgram_user');
             const onboardingCompleted = localStorage.getItem('onboarding_completed');
             
             if (!savedUser) {
-                // Yangi foydalanuvchi - Onboarding ni ochish
+                // Yangi foydalanuvchi - Onboarding
                 this.openPage({ id: 'onboardingPage' });
             } else if (savedUser && onboardingCompleted !== 'true') {
                 // Onboarding tugallanmagan
                 this.openPage({ id: 'onboardingPage' });
             } else {
-                // Oddiy foydalanuvchi - Main App
+                // Ro'yxatdan o'tgan - Main App
                 this.openPage({ id: 'mainApp' });
             }
         }, 100);
@@ -60,12 +60,11 @@ class UIBoss {
         eventBus.on(UI_EVENTS.LOADER_SHOW, this.showLoader.bind(this));
         eventBus.on(UI_EVENTS.LOADER_HIDE, this.hideLoader.bind(this));
         eventBus.on(UI_EVENTS.THEME_CHANGE, this.changeTheme.bind(this));
-        eventBus.on(UI_EVENTS.NEON_PULSE, this.applyNeonPulse.bind(this));
         eventBus.on(UI_EVENTS.SOUND_PLAY, this.playSound.bind(this));
         eventBus.on(UI_EVENTS.SOUND_STOP, this.stopAllSounds.bind(this));
         
         eventBus.on(CHAT_EVENTS.MESSAGE_RECEIVED, () => this.glowEffect('chat-container'));
-        eventBus.on(CALL_EVENTS.INCOMING, () => this.glowEffect('app-container', 'purple'));
+        eventBus.on(CALL_EVENTS.INCOMING, () => this.glowEffect('app-container', 'accent'));
         
         console.log('📡 UI Boss eventlarni tinglayapti');
     }
@@ -99,29 +98,20 @@ class UIBoss {
     closePage({ id }) {
         const page = document.getElementById(id);
         if (page) page.style.display = 'none';
-        
         if (this.currentPage === id) this.currentPage = null;
-        
         eventBus.emit(UI_EVENTS.PAGE_CLOSED, { pageId: id });
         console.log(`📄 Sahifa yopildi: ${id}`);
     }
 
     openModal({ id, data }) {
         let modal = document.getElementById(id);
-        
-        if (!modal) {
-            modal = this.createModal(id);
-        }
-        
+        if (!modal) modal = this.createModal(id);
         const titleEl = modal.querySelector('.modal-title');
         const contentEl = modal.querySelector('.modal-content');
-        
         if (titleEl && data?.title) titleEl.textContent = data.title;
         if (contentEl && data?.content) contentEl.innerHTML = data.content;
-        
         modal.style.display = 'flex';
         this.modals.set(id, modal);
-        
         eventBus.emit(UI_EVENTS.MODAL_OPENED, { modalId: id, data });
     }
 
@@ -129,30 +119,17 @@ class UIBoss {
         const modal = document.createElement('div');
         modal.id = id;
         modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-card">
-                <div class="modal-header">
-                    <h3 class="modal-title"></h3>
-                    <button class="modal-close">✕</button>
-                </div>
-                <div class="modal-content"></div>
-            </div>
-        `;
-        
+        modal.innerHTML = `<div class="modal-card"><div class="modal-header"><h3 class="modal-title"></h3><button class="modal-close">✕</button></div><div class="modal-content"></div></div>`;
         modal.querySelector('.modal-close').onclick = () => this.closeModal({ id });
         modal.onclick = (e) => { if (e.target === modal) this.closeModal({ id }); };
-        
         document.body.appendChild(modal);
         return modal;
     }
 
     closeModal({ id }) {
         const modal = this.modals.get(id);
-        if (modal) {
-            modal.style.display = 'none';
-            this.modals.delete(id);
-            eventBus.emit(UI_EVENTS.MODAL_CLOSED, { modalId: id });
-        }
+        if (modal) { modal.style.display = 'none'; this.modals.delete(id); }
+        eventBus.emit(UI_EVENTS.MODAL_CLOSED, { modalId: id });
     }
 
     showToast({ msg, type = 'info', duration = 3000 }) {
@@ -160,63 +137,42 @@ class UIBoss {
         const toast = document.createElement('div');
         toast.id = toastId;
         toast.className = `toast toast-${type}`;
-        toast.innerHTML = `
-            <span class="toast-message">${msg}</span>
-            <button class="toast-close">✕</button>
-        `;
-        
+        toast.innerHTML = `<span class="toast-message">${msg}</span><button class="toast-close">✕</button>`;
         toast.querySelector('.toast-close').onclick = () => this.hideToast(toastId);
-        
         document.body.appendChild(toast);
         this.toasts.set(toastId, toast);
-        
         setTimeout(() => this.hideToast(toastId), duration);
     }
 
     hideToast(toastId) {
         const toast = this.toasts.get(toastId);
-        if (toast) {
-            toast.remove();
-            this.toasts.delete(toastId);
-        }
+        if (toast) { toast.remove(); this.toasts.delete(toastId); }
     }
 
     showLoader({ id = 'global-loader', msg = 'Yuklanmoqda...' }) {
         let loader = document.getElementById(id);
-        
         if (!loader) {
             loader = document.createElement('div');
             loader.id = id;
             loader.className = 'loader';
-            loader.innerHTML = `
-                <div class="loader-content">
-                    <div class="spinner"></div>
-                    <span class="loader-message">${msg}</span>
-                </div>
-            `;
+            loader.innerHTML = `<div class="loader-content"><div class="spinner"></div><span class="loader-message">${msg}</span></div>`;
             document.body.appendChild(loader);
         }
-        
         loader.style.display = 'flex';
         this.loaders.set(id, loader);
     }
 
     hideLoader({ id = 'global-loader' }) {
         const loader = this.loaders.get(id);
-        if (loader) {
-            loader.style.display = 'none';
-            this.loaders.delete(id);
-        }
+        if (loader) { loader.style.display = 'none'; this.loaders.delete(id); }
     }
 
     changeTheme({ theme }) {
         const validThemes = ['dark', 'light'];
         if (!validThemes.includes(theme)) return;
-        
         document.body.classList.remove(`theme-${this.theme}`);
         document.body.classList.add(`theme-${theme}`);
         this.theme = theme;
-        
         localStorage.setItem('mrgram_theme', theme);
         eventBus.emit(UI_EVENTS.THEME_CHANGED, { theme });
     }
@@ -226,52 +182,29 @@ class UIBoss {
         this.changeTheme({ theme: saved });
     }
 
-    applyNeonPulse({ element }) {
-        const el = typeof element === 'string' ? document.getElementById(element) : element;
-        if (el) {
-            el.classList.add('animate-neon-pulse');
-            setTimeout(() => el.classList.remove('animate-neon-pulse'), 1000);
-        }
-    }
-
-    glowEffect(elementId, color = 'cyan') {
+    glowEffect(elementId, color = 'accent') {
         const el = document.getElementById(elementId);
-        if (el) {
-            el.style.boxShadow = `var(--glow-${color})`;
-            setTimeout(() => el.style.boxShadow = '', 500);
-        }
+        if (el) { el.style.boxShadow = `var(--glow-${color})`; setTimeout(() => el.style.boxShadow = '', 500); }
     }
 
     playSound({ sound, loop = false }) {
         const audio = new Audio(`/assets/sounds/${sound}`);
         audio.loop = loop;
         audio.play().catch(() => {});
-        
         if (loop) this.sounds.set(sound, audio);
     }
 
     stopAllSounds() {
-        this.sounds.forEach(audio => {
-            audio.pause();
-            audio.currentTime = 0;
-        });
+        this.sounds.forEach(audio => { audio.pause(); audio.currentTime = 0; });
         this.sounds.clear();
     }
 
     preloadSounds() {
-        const sounds = ['notification.mp3', 'call-in.mp3', 'call-out.mp3'];
-        sounds.forEach(sound => {
-            new Audio(`/assets/sounds/${sound}`).load();
-        });
+        ['notification.mp3', 'call-in.mp3', 'call-out.mp3'].forEach(s => new Audio(`/assets/sounds/${s}`).load());
     }
 
-    getCurrentPage() {
-        return this.currentPage;
-    }
-
-    getCurrentTheme() {
-        return this.theme;
-    }
+    getCurrentPage() { return this.currentPage; }
+    getCurrentTheme() { return this.theme; }
 
     report() {
         return {
@@ -286,5 +219,4 @@ class UIBoss {
 }
 
 const uiBoss = new UIBoss();
-
 export default uiBoss;

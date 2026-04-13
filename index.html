@@ -4,369 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MR GRAM · Premium</title>
-    
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230088cc' stroke-width='1.5'%3E%3Cpath d='M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z'/%3E%3C/svg%3E">
- <style>
-     * { box-sizing: border-box; }
-     body { margin: 0; padding: 0; }
-     .auth-switch-text { color: var(--text-secondary) !important; cursor: default !important; font-weight: 400 !important; }
-     .auth-switch-text:hover { text-decoration: none !important; text-shadow: none !important; }
-     
-     /* Onboarding slide lar - FAQAT BITTASI KO'RINADI */
-     .onboarding-slide {
-         display: none !important;
-     }
-     .onboarding-slide.active {
-         display: block !important;
-     }
-     
-     .onboarding-page { 
-         display: flex !important; 
-         align-items: center; 
-         justify-content: center; 
-     }
-     .onboarding-container { 
-         width: 100%; 
-         max-width: 380px; 
-         margin: 0 auto; 
-         padding: 30px 20px;
-     }
-     .slide-content { 
-         text-align: center; 
-     }
-     .progress-dot { 
-         transition: all 0.3s ease; 
-     }
-     
-     /* Logo */
-     .onboarding-logo {
-         margin-bottom: 20px;
-     }
-     
-     /* Input */
-     .onboarding-input {
-         width: 100%;
-         padding: 15px;
-         background: var(--input-bg, #1e1e1e);
-         border: 1px solid var(--input-border, #333);
-         border-radius: 15px;
-         color: var(--text, white);
-         font-size: 16px;
-         margin-bottom: 15px;
-     }
-     
-     /* Button */
-     .onboarding-btn {
-         width: 100%;
-         padding: 15px;
-         background: #0088cc;
-         color: white;
-         border: none;
-         border-radius: 15px;
-         font-weight: 600;
-         font-size: 16px;
-         cursor: pointer;
-         margin-top: 10px;
-     }
-     
-     .onboarding-skip {
-         background: none;
-         border: none;
-         color: var(--text-tertiary, #888);
-         margin-top: 10px;
-         cursor: pointer;
-     }
-     
-     /* Progress dots */
-     .onboarding-progress {
-         display: flex;
-         justify-content: center;
-         gap: 8px;
-         margin-top: 30px;
-     }
-     
-     .progress-dot {
-         width: 8px;
-         height: 8px;
-         background: #555;
-         border-radius: 4px;
-         transition: all 0.3s;
-     }
-     
-     .progress-dot.active {
-         width: 24px;
-         background: #0088cc;
-     }
-     
-     .progress-dot.completed {
-         background: #0088cc;
-         opacity: 0.5;
-     }
- </style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%2324A1DE'/%3E%3Cpath d='M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #121212; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        #loader { display: flex; align-items: center; justify-content: center; height: 100vh; color: white; font-size: 18px; }
+    </style>
 </head>
 <body>
+    <div id="loader">⏳ Yuklanmoqda...</div>
     
-    <div id="appRoot" class="app-container">
-        
-        <!-- ONBOARDING PAGE -->
-        <div id="onboardingPage" class="onboarding-page" style="display: none;">
-            <div class="onboarding-theme-toggle" id="themeToggle">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-            </div>
+    <script>
+        (function() {
+            const savedUser = localStorage.getItem('mrgram_user');
+            const onboardingDone = localStorage.getItem('onboarding_completed');
             
-            <div class="onboarding-container">
-                <div class="onboarding-slides">
-                    
-                    <!-- STEP 1: Welcome -->
-                    <div class="onboarding-slide active" data-step="1">
-                        <div class="slide-content">
-                            <div class="onboarding-logo">
-                               <svg width="200" height="200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                 <circle cx="12" cy="12" r="12" fill="#24A1DE"/>
-                                 
-                                 <path d="M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16" 
-                                       stroke="white" 
-                                       stroke-width="2.5" 
-                                       stroke-linecap="round" 
-                                       stroke-linejoin="round"/>
-                               </svg>
-                               
-                            </div>
-                            <h1 class="onboarding-title">MR GRAM</h1>
-                            <p class="onboarding-description">Zamonaviy, xavfsiz va tezkor messenjer</p>
-                            <button class="onboarding-btn" data-next="2">Boshlash</button>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 2: Name -->
-                    <div class="onboarding-slide" data-step="2">
-                        <div class="slide-content">
-                            <h2 class="onboarding-step-title">Ismingiz nima?</h2>
-                            <p class="onboarding-step-desc">Do'stlaringiz sizni shu ism bilan topadi</p>
-                            <div class="onboarding-input-wrapper">
-                                <input type="text" id="onboardingName" class="onboarding-input" placeholder="Ismingiz" autocomplete="name">
-                            </div>
-                            <div class="onboarding-input-wrapper">
-                                <input type="text" id="onboardingUsername" class="onboarding-input" placeholder="Username" autocomplete="username">
-                            </div>
-                            <button class="onboarding-btn" data-next="3">Davom etish</button>
-                            <button class="onboarding-skip" data-next="3">O'tkazib yuborish</button>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 3: Avatar -->
-                    <div class="onboarding-slide" data-step="3">
-                        <div class="slide-content">
-                            <h2 class="onboarding-step-title">Profil rasmi</h2>
-                            <p class="onboarding-step-desc">O'zingizga yoqqan rasmni tanlang</p>
-                            <div class="onboarding-avatar-wrapper">
-                                <div class="onboarding-avatar" onclick="document.getElementById('onboardingAvatarInput').click()">
-                                    <img id="onboardingAvatarPreview" src="" alt="Avatar" style="display: none;">
-                                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <input type="file" id="onboardingAvatarInput" accept="image/*" style="display: none;">
-                            <button class="onboarding-btn" data-next="4">Davom etish</button>
-                            <button class="onboarding-skip" data-next="4">O'tkazib yuborish</button>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 4: Password -->
-                    <div class="onboarding-slide" data-step="4">
-                        <div class="slide-content">
-                            <h2 class="onboarding-step-title">Parol o'rnating</h2>
-                            <p class="onboarding-step-desc">Hisobingizni himoya qilish uchun</p>
-                            <div class="onboarding-input-wrapper">
-                                <input type="password" id="onboardingPassword" class="onboarding-input" placeholder="Parol" autocomplete="new-password">
-                            </div>
-                            <div class="onboarding-input-wrapper">
-                                <input type="password" id="onboardingConfirmPassword" class="onboarding-input" placeholder="Parolni tasdiqlang">
-                            </div>
-                            <button class="onboarding-btn" data-next="5">Ro'yxatdan o'tish</button>
-                        </div>
-                    </div>
-                    
-                    <!-- STEP 5: Success -->
-                    <div class="onboarding-slide" data-step="5">
-                        <div class="slide-content">
-                            <div class="onboarding-success-icon">
-                                <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#4caf50" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M8 12l3 3 6-6"/>
-                                </svg>
-                            </div>
-                            <h2 class="onboarding-title">Tayyor!</h2>
-                            <p class="onboarding-description">Muvaffaqiyatli ro'yxatdan o'tdingiz</p>
-                            <button class="onboarding-btn" id="finishOnboarding">Chatni boshlash</button>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                <div class="onboarding-progress">
-                    <span class="progress-dot active" data-step="1"></span>
-                    <span class="progress-dot" data-step="2"></span>
-                    <span class="progress-dot" data-step="3"></span>
-                    <span class="progress-dot" data-step="4"></span>
-                    <span class="progress-dot" data-step="5"></span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- AUTH PAGE (zaxira) -->
-        <div id="authPage" class="auth-page" style="display: none;">
-            <div class="auth-card">
-                <div class="auth-logo">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#0088cc" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6 C 8 6, 6 10, 6 14 C 6 18, 12 20, 12 20 C 12 20, 18 18, 18 14 C 18 9, 15 6, 12 6 Z"/>
-                    </svg>
-                </div>
-                <h1 class="auth-title">MR GRAM</h1>
-                <p class="auth-subtitle">Premium Edition</p>
-                
-                <div id="regBox" style="display: block;">
-                    <div class="auth-input-group">
-                        <input type="text" id="regName" class="auth-input" placeholder="Ismingiz">
-                    </div>
-                </div>
-                
-                <div class="auth-input-group">
-                    <input type="text" id="regUser" class="auth-input" placeholder="Username">
-                </div>
-                
-                <div class="auth-input-group">
-                    <input type="password" id="regPass" class="auth-input" placeholder="Parol">
-                </div>
-                
-                <button id="authBtn" class="auth-btn">RO'YXATDAN O'TISH</button>
-                
-                <p class="auth-switch">
-                    <span class="auth-switch-text" id="switchText">Hisobingiz bormi?</span>
-                    <span id="switchBtn">Kirish</span>
-                </p>
-            </div>
-        </div>
-        
-        <!-- MAIN APP -->
-        <div id="mainApp" style="display: none;">
-            <div style="padding: 20px; background: var(--glass-bg);">
-                <h1 style="color: var(--accent);">✨ MR GRAM</h1>
-                <p>Xush kelibsiz, <span id="displayName"></span>!</p>
-            </div>
-            <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
-                <button id="logoutBtn" class="auth-btn" style="width: auto; padding: 12px 40px;">CHIQISH</button>
-            </div>
-        </div>
-        
-        <!-- CALL CONTAINER -->
-        <div id="callContainer" style="display: none;"></div>
-        
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-    
-    <script type="module" src="assets/js/core/main-boss.js"></script>
-    <script type="module">
-        import mainBoss from './assets/js/core/main-boss.js';
-        import eventBus from './assets/js/core/event-bus.js';
-        import { AUTH_EVENTS, UI_EVENTS } from './assets/js/constants/events.js';
-        
-        window.mainBoss = mainBoss;
-        window.eventBus = eventBus;
-        
-        let onboardingData = {};
-        let currentStep = 1;
-        
-        // Auth state tinglash
-        eventBus.on(AUTH_EVENTS.STATE_CHANGED, ({ user }) => {
-            if (user) {
-                document.getElementById('displayName').textContent = user.name || user.username;
-            }
-        });
-        
-        document.addEventListener('click', e => {
-            // Next tugmasi
-            if (e.target.hasAttribute('data-next')) {
-                const nextStep = parseInt(e.target.getAttribute('data-next'));
-                
-                if (currentStep === 2) {
-                    onboardingData.name = document.getElementById('onboardingName')?.value;
-                    onboardingData.username = document.getElementById('onboardingUsername')?.value;
-                }
-                if (currentStep === 4) {
-                    const pass = document.getElementById('onboardingPassword')?.value;
-                    const confirm = document.getElementById('onboardingConfirmPassword')?.value;
-                    if (pass !== confirm) {
-                        eventBus.emit(UI_EVENTS.TOAST_SHOW, { msg: '❌ Parollar mos kelmadi!', type: 'error' });
-                        return;
-                    }
-                    onboardingData.password = pass;
-                }
-                
-                document.querySelectorAll('.onboarding-slide').forEach(s => s.classList.remove('active'));
-                document.querySelector(`.onboarding-slide[data-step="${nextStep}"]`).classList.add('active');
-                
-                document.querySelectorAll('.progress-dot').forEach((d, i) => {
-                    d.classList.toggle('active', i + 1 === nextStep);
-                    d.classList.toggle('completed', i + 1 < nextStep);
-                });
-                
-                currentStep = nextStep;
+            // Universal base path aniqlash
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const basePath = isLocalhost ? '' : '';
+            
+            // Qayerga yo'naltirish
+            let targetPage;
+            
+            if (!savedUser || onboardingDone !== 'true') {
+                targetPage = basePath + '/html/onboard.html';
+            } else {
+                targetPage = basePath + '/html/chat.html';
             }
             
-            // Finish
-            if (e.target.id === 'finishOnboarding') {
-                localStorage.setItem('onboarding_completed', 'true');
-                
-                if (onboardingData.username && onboardingData.password) {
-                    eventBus.emit(AUTH_EVENTS.REGISTER, {
-                        username: onboardingData.username,
-                        password: onboardingData.password,
-                        confirm: onboardingData.password,
-                        name: onboardingData.name || onboardingData.username,
-                        avatar: onboardingData.avatar
+            // Agar localhost bo'lsa va fayl topilmasa, muqobil yo'l
+            if (isLocalhost) {
+                // Localhostda html/ papkasini tekshirish
+                fetch(targetPage, { method: 'HEAD' })
+                    .then(res => {
+                        if (!res.ok) {
+                            // Agar html/onboard.html topilmasa, root dagi onboard.html ga
+                            if (targetPage.includes('/html/onboard.html')) {
+                                window.location.href = '/onboard.html';
+                            } else {
+                                window.location.href = '/chat.html';
+                            }
+                        } else {
+                            window.location.href = targetPage;
+                        }
+                    })
+                    .catch(() => {
+                        // Xatolik bo'lsa, root ga yo'naltirish
+                        if (!savedUser || onboardingDone !== 'true') {
+                            window.location.href = '/onboard.html';
+                        } else {
+                            window.location.href = '/chat.html';
+                        }
                     });
-                }
-                
-                eventBus.emit(UI_EVENTS.PAGE_CLOSE, { id: 'onboardingPage' });
+            } else {
+                // Vercel/GitHub Pages uchun to'g'ridan-to'g'ri yo'naltirish
+                window.location.href = targetPage;
             }
-            
-            // Logout
-            if (e.target.id === 'logoutBtn') {
-                eventBus.emit(AUTH_EVENTS.LOGOUT);
-            }
-        });
-        
-        // Avatar
-        document.getElementById('onboardingAvatarInput')?.addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = ev => {
-                    document.getElementById('onboardingAvatarPreview').src = ev.target.result;
-                    document.getElementById('onboardingAvatarPreview').style.display = 'block';
-                    onboardingData.avatar = file;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Theme
-        document.getElementById('themeToggle')?.addEventListener('click', () => {
-            document.body.classList.toggle('theme-dark');
-            document.body.classList.toggle('theme-light');
-        });
-        
-        // Start
-        mainBoss.start().then(() => console.log('✅ MRGRAM tayyor!'));
+        })();
     </script>
 </body>
 </html>

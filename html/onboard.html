@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MR GRAM · Ro'yxatdan o'tish</title>
+    <link rel="stylesheet" href="../assets/css/pages/onboard.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%2324A1DE'/%3E%3Cpath d='M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+    <div class="onboarding-page">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </div>
+        
+        <div class="onboarding-container">
+            <div class="steps-container">
+                <!-- STEP 1 -->
+                <div class="step active" data-step="1">
+                    <div class="logo">
+                        <svg viewBox="0 0 24 24" width="80" height="80">
+                            <circle cx="12" cy="12" r="12" fill="#24A1DE"/>
+                            <path d="M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16" stroke="white" stroke-width="2.5"/>
+                        </svg>
+                    </div>
+                    <h1>MR GRAM</h1>
+                    <p>Zamonaviy, xavfsiz va tezkor messenjer</p>
+                    <button class="btn" onclick="nextStep(2)">Boshlash</button>
+                </div>
+                
+                <!-- STEP 2 -->
+                <div class="step" data-step="2">
+                    <h2>Ismingiz nima?</h2>
+                    <p>Do'stlaringiz sizni shu ism bilan topadi</p>
+                    <input type="text" id="onboardingName" placeholder="Ismingiz" autocomplete="name">
+                    <input type="text" id="onboardingUsername" placeholder="Username" autocomplete="username">
+                    <button class="btn" onclick="nextStep(3)">Davom etish</button>
+                    <button class="skip" onclick="nextStep(3)">O'tkazib yuborish</button>
+                </div>
+                
+                <!-- STEP 3 -->
+                <div class="step" data-step="3">
+                    <h2>Profil rasmi</h2>
+                    <p>O'zingizga yoqqan rasmni tanlang</p>
+                    <div class="avatar-box" onclick="document.getElementById('avatarInput').click()">
+                        <img id="avatarPreview" alt="Avatar">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#666">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                    <button class="btn" onclick="nextStep(4)">Davom etish</button>
+                    <button class="skip" onclick="nextStep(4)">O'tkazib yuborish</button>
+                </div>
+                
+                <!-- STEP 4 -->
+                <div class="step" data-step="4">
+                    <h2>Parol o'rnating</h2>
+                    <p>Hisobingizni himoya qilish uchun</p>
+                    <input type="password" id="onboardingPassword" placeholder="Parol">
+                    <input type="password" id="onboardingConfirm" placeholder="Parolni tasdiqlang">
+                    <button class="btn" onclick="nextStep(5)">Ro'yxatdan o'tish</button>
+                </div>
+                
+                <!-- STEP 5 -->
+                <div class="step" data-step="5">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#4caf50" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 12l3 3 6-6"/>
+                        </svg>
+                    </div>
+                    <h2>Tayyor!</h2>
+                    <p>Muvaffaqiyatli ro'yxatdan o'tdingiz</p>
+                    <button class="btn" onclick="finishOnboarding()">Chatni boshlash</button>
+                </div>
+            </div>
+            
+            <div class="progress-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let onboardingData = {};
+        let currentStep = 1;
+        
+        window.nextStep = function(step) {
+            // Ma'lumotlarni saqlash
+            if (currentStep === 2) {
+                onboardingData.name = document.getElementById('onboardingName')?.value;
+                onboardingData.username = document.getElementById('onboardingUsername')?.value;
+            }
+            if (currentStep === 4) {
+                const pass = document.getElementById('onboardingPassword')?.value;
+                const confirm = document.getElementById('onboardingConfirm')?.value;
+                if (pass !== confirm) { alert('❌ Parollar mos kelmadi!'); return; }
+                if (pass.length < 6) { alert('❌ Parol kamida 6 ta belgi!'); return; }
+                onboardingData.password = pass;
+            }
+            
+            // Step ni o'zgartirish
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i+1 === step));
+            currentStep = step;
+        };
+        
+        window.finishOnboarding = function() {
+            localStorage.setItem('mrgram_user', JSON.stringify(onboardingData));
+            localStorage.setItem('onboarding_completed', 'true');
+            window.location.href = '../html/chat.html';
+        };
+        
+        window.toggleTheme = function() {
+            document.body.classList.toggle('light-theme');
+        };
+        
+        document.getElementById('avatarInput')?.addEventListener('change', e => {
+            const f = e.target.files[0];
+            if (f) {
+                const r = new FileReader();
+                r.onload = ev => {
+                    document.getElementById('avatarPreview').src = ev.target.result;
+                    document.getElementById('avatarPreview').style.display = 'block';
+                    onboardingData.avatar = f;
+                };
+                r.readAsDataURL(f);
+            }
+        });
+    </script>
+</body>
+</html>
