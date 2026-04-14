@@ -1,3 +1,235 @@
-<!DOCTYPE html> <html lang="uz"> <head>     <meta charset="UTF-8">     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">     <title>MR GRAM · Ro'yxatdan o'tish</title>
-    <link rel="manifest" href="../manifest.json">     <link rel="stylesheet" href="../assets/css/style.css">     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%2324A1DE'/%3E%3Cpath d='M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"> </head> 
-    <body>     <div class="theme-toggle" onclick="MRGRAM.theme.toggle()">         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>         </svg>     </div>          <div class="onboard-container">         <div id="stepsContainer">             <!-- STEP 1 -->             <div class="step active" data-step="1">                 <div class="logo">                     <svg width="80" height="80" viewBox="0 0 24 24">                         <circle cx="12" cy="12" r="12" fill="#24A1DE"/>                         <path d="M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16" stroke="white" stroke-width="2.5"/>                     </svg>                 </div>                 <h1 style="font-size:28px; margin-bottom:12px;">MR GRAM</h1>                 <p style="color:#888; margin-bottom:30px;">Zamonaviy, xavfsiz va tezkor messenjer</p>                 <button class="btn" onclick="nextStep(2)">Boshlash</button>             </div>                          <!-- STEP 2 -->             <div class="step" data-step="2">                 <h2 style="font-size:24px; margin-bottom:12px;">Ismingiz nima?</h2>                 <p style="color:#888; margin-bottom:25px;">Do'stlaringiz sizni shu ism bilan topadi</p>                 <input type="text" id="onboardName" class="input" placeholder="Ismingiz" autocomplete="name">                 <input type="text" id="onboardUsername" class="input" placeholder="Username" autocomplete="username" style="margin-top:12px;">                 <button class="btn" onclick="nextStep(3)">Davom etish</button>                 <button class="btn btn-secondary" onclick="nextStep(3)" style="margin-top:8px;">O'tkazib yuborish</button>             </div>                          <!-- STEP 3 -->             <div class="step" data-step="3">                 <h2 style="font-size:24px; margin-bottom:12px;">Profil rasmi</h2>                 <p style="color:#888; margin-bottom:25px;">O'zingizga yoqqan rasmni tanlang</p>                 <div style="margin:20px 0;" onclick="document.getElementById('avatarInput').click()">                     <div style="width:100px;height:100px;border-radius:50%;background:#1e1e1e;border:2px dashed #333;margin:0 auto;display:flex;align-items:center;justify-content:center;cursor:pointer;">                         <img id="avatarPreview" style="width:100%;height:100%;object-fit:cover;display:none;border-radius:50%;">                         <svg id="avatarPlaceholder" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666">                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>                         </svg>                     </div>                 </div>                 <input type="file" id="avatarInput" accept="image/*" style="display:none;">                 <button class="btn" onclick="nextStep(4)">Davom etish</button>                 <button class="btn btn-secondary" onclick="nextStep(4)" style="margin-top:8px;">O'tkazib yuborish</button>             </div>                          <!-- STEP 4 -->             <div class="step" data-step="4">                 <h2 style="font-size:24px; margin-bottom:12px;">Parol o'rnating</h2>                 <p style="color:#888; margin-bottom:25px;">Hisobingizni himoya qilish uchun</p>                 <input type="password" id="onboardPassword" class="input" placeholder="Parol">                 <input type="password" id="onboardConfirm" class="input" placeholder="Parolni tasdiqlang" style="margin-top:12px;">                 <button class="btn" onclick="nextStep(5)">Ro'yxatdan o'tish</button>             </div>                          <!-- STEP 5 -->             <div class="step" data-step="5">                 <div style="margin-bottom:20px;">                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2">                         <circle cx="12" cy="12" r="10"/>                         <path d="M8 12l3 3 6-6"/>                     </svg>                 </div>                 <h2 style="font-size:28px; margin-bottom:12px;">Tayyor!</h2>                 <p style="color:#888; margin-bottom:30px;">Muvaffaqiyatli ro'yxatdan o'tdingiz</p>                 <button class="btn" onclick="finishOnboarding()">Chatni boshlash</button>             </div>         </div>                  <div class="progress-dots">             <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>         </div>     </div>          <script src="../assets/js/app.js"></script>     <script>         let currentStep = 1;         const onboardData = {};                  window.nextStep = function(step) {             if (currentStep === 2) {                 onboardData.name = document.getElementById('onboardName')?.value || '';                 onboardData.username = document.getElementById('onboardUsername')?.value || '';             }             if (currentStep === 4) {                 const pass = document.getElementById('onboardPassword')?.value;                 const confirm = document.getElementById('onboardConfirm')?.value;                 if (pass !== confirm) {                     MRGRAM.ui.showToast('Parollar mos kelmadi!', 'error');                     return;                 }                 if (pass.length < 6) {                     MRGRAM.ui.showToast('Parol kamida 6 ta belgi!', 'error');                     return;                 }                 onboardData.password = pass;             }                          document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));             document.querySelector(`.step[data-step="${step}"]`).classList.add('active');             document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i+1 === step));             currentStep = step;         };                  window.finishOnboarding = function() {             const userData = {                 name: onboardData.name || 'Foydalanuvchi',                 username: onboardData.username || 'user' + Date.now(),                 password: onboardData.password,                 avatar: onboardData.avatar || null,                 createdAt: new Date().toISOString()             };                          MRGRAM.user.set(userData);             MRGRAM.onboarding.complete();             MRGRAM.ui.showToast('Ro\'yxatdan o\'tdingiz!', 'success');                          setTimeout(() => {                 window.location.href = '../home/';             }, 500);         };                  document.getElementById('avatarInput')?.addEventListener('change', (e) => {             const file = e.target.files[0];             if (file) {                 const reader = new FileReader();                 reader.onload = (ev) => {                     document.getElementById('avatarPreview').src = ev.target.result;                     document.getElementById('avatarPreview').style.display = 'block';                     document.getElementById('avatarPlaceholder').style.display = 'none';                     onboardData.avatar = ev.target.result;                 };                 reader.readAsDataURL(file);             }         });                  MRGRAM.ui.setPageTitle('Ro\'yxatdan o\'tish');     </script> </body> </html>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MR GRAM · Welcome</title>
+    
+    <link rel="manifest" href="../manifest.json">
+    
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/pages/onboard.css">
+    
+    <style>
+        :root {
+            --mr-blue: #34B7F1;
+            --bg: #050607;
+            --glass: rgba(52, 183, 241, 0.04);
+            --border: rgba(52, 183, 241, 0.12);
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 2026 Minimalist Glass Card */
+        .vessel {
+            width: 88%;
+            max-width: 380px;
+            padding: 50px 25px;
+            background: var(--glass);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--border);
+            border-radius: 45px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+        }
+
+        /* SkyBlue Neon Glow */
+        .vessel::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: var(--mr-blue);
+            filter: blur(90px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .step { display: none; animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .step.active { display: block; }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(25px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 { font-size: 36px; font-weight: 900; letter-spacing: -2px; margin: 0; }
+        p { color: #8e9aaf; font-size: 15px; margin: 10px 0 35px; line-height: 1.6; }
+
+        /* Input Styles */
+        .g-input {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px 22px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 12px;
+        }
+
+        .g-input:focus {
+            border-color: var(--mr-blue);
+            background: rgba(52, 183, 241, 0.08);
+            box-shadow: 0 0 25px rgba(52, 183, 241, 0.15);
+        }
+
+        /* Button Styles */
+        .btn-prime {
+            width: 100%;
+            background: var(--mr-blue);
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            padding: 18px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-prime:active { transform: scale(0.96); }
+
+        .avatar-frame {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(52, 183, 241, 0.05);
+            border: 2px dashed var(--border);
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .avatar-frame:hover { border-color: var(--mr-blue); }
+        #preview-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
+
+        /* Dot Indicators */
+        .dot-box {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 45px;
+        }
+
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: 0.5s; }
+        .dot.active { width: 24px; background: var(--mr-blue); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="vessel">
+        <div id="steps">
+            <div class="step active" data-step="1">
+                <div style="margin-bottom: 30px;">
+                    <svg width="85" height="85" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="12" fill="#34B7F1"/>
+                        <path d="M5 16C5 16 7.5 6 10.5 11.5C13.5 17 16 6 19 16" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1>MR GRAM</h1>
+                <p>Minimalizm, tezlik va 2026-yil <br> texnologiyasi bir joyda.</p>
+                <button class="btn-prime" onclick="next(2)">Boshladik</button>
+            </div>
+
+            <div class="step" data-step="2">
+                <h2 style="font-size: 26px; margin: 0;">Kimlik</h2>
+                <p>O'zingizga mos nom tanlang</p>
+                <input type="text" id="nameIn" class="g-input" placeholder="Ismingiz">
+                <input type="text" id="userIn" class="g-input" placeholder="@username">
+                <button class="btn-prime" onclick="next(3)">Davom etish</button>
+            </div>
+
+            <div class="step" data-step="3">
+                <h2 style="font-size: 26px; margin: 0;">Surat</h2>
+                <p>Profil uchun rasm yuklang</p>
+                <div class="avatar-frame" onclick="document.getElementById('fileIn').click()">
+                    <img id="preview-img">
+                    <svg id="p-ico" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#34B7F1" stroke-width="1.5">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <input type="file" id="fileIn" hidden accept="image/*">
+                <button class="btn-prime" onclick="next(4)">Keyingisi</button>
+            </div>
+
+            <div class="step" data-step="4">
+                <h2 style="font-size: 28px; margin: 0;">Tayyor!</h2>
+                <p>Barcha ma'lumotlar saqlandi.<br>Muloqotni boshlashingiz mumkin.</p>
+                <button class="btn-prime" onclick="complete()">Kirish</button>
+            </div>
+        </div>
+
+        <div class="dot-box">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
+    <script src="../assets/js/core/main-boss.js"></script>
+    <script src="../assets/js/utils/storage.js"></script>
+    <script src="../assets/js/modules/auth/auth-register.js"></script>
+
+    <script>
+        let current = 1;
+        const onboardData = {};
+
+        function next(n) {
+            if(current === 2) {
+                onboardData.name = document.getElementById('nameIn').value;
+                onboardData.username = document.getElementById('userIn').value;
+            }
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-step="${n}"]`).classList.add('active');
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i+1 === n));
+            current = n;
+        }
+
+        document.getElementById('fileIn').onchange = (e) => {
+            const r = new FileReader();
+            r.onload = (ev) => {
+                const img = document.getElementById('preview-img');
+                img.src = ev.target.result;
+                img.style.display = 'block';
+                document.getElementById('p-ico').style.display = 'none';
+                onboardData.avatar = ev.target.result;
+            };
+            r.readAsDataURL(e.target.files[0]);
+        };
+
+        function complete() {
+            // Sening storage mantiqing orqali saqlash
+            localStorage.setItem('mrgram_auth_status', 'true');
+            localStorage.setItem('mrgram_user_profile', JSON.stringify(onboardData));
+            
+            // ROOT ichidagi home papkasiga otish
+            window.location.href = '../home/index.html';
+        }
+    </script>
+</body>
+</html>
