@@ -1,138 +1,247 @@
-// home/script.js - MRGRAM Home Logic | Full Responsive
-
 (function() {
     'use strict';
-    
-    // ========== ELEMENTLAR ==========
+
+    const state = { activeChat: null, theme: 'dark' };
+    const appContainer = document.getElementById('appContainer');
+    const sidebar = document.getElementById('sidebar');
+    const resizer = document.getElementById('resizer');
+    const chatList = document.getElementById('chatList');
+    const chatTitle = document.getElementById('chatTitle');
+    const chatSubtitle = document.getElementById('chatSubtitle');
+    const backBtn = document.getElementById('backBtn');
+    const fabBtn = document.getElementById('fabBtn');
     const menuBtn = document.getElementById('menuBtn');
-    const mobileSidebar = document.getElementById('mobileSidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const tabs = document.querySelectorAll('.tab');
-    const contentList = document.getElementById('contentList');
-    const searchBtn = document.getElementById('searchBtn');
-    const themeToggleDesktop = document.getElementById('themeToggleDesktop');
-    const themeToggleMobile = document.getElementById('themeToggleMobile');
-    const logoutBtns = [document.getElementById('logoutBtnDesktop'), document.getElementById('logoutBtnMobile')];
-    
-    let currentTab = 'all';
-    
-    // ========== SIDEBAR ==========
-    function openSidebar() {
-        mobileSidebar?.classList.add('open');
-        sidebarOverlay?.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeSidebar() {
-        mobileSidebar?.classList.remove('open');
-        sidebarOverlay?.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    
-    // ========== TABLAR ==========
-    function switchTab(tabId) {
-        currentTab = tabId;
-        tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
-        loadContent(tabId);
-        localStorage.setItem('mrgram_active_tab', tabId);
-    }
-    
-    // ========== KONTENT ==========
-    function loadContent(tabId) {
-        const data = {
-            all: [
-                { type: 'chat', name: 'Demo User', msg: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
-                { type: 'chat', name: 'Fazlulloh', msg: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true },
-                { type: 'group', name: 'Dasturchilar', msg: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 },
-                { type: 'channel', name: 'MR GRAM', msg: 'Yangi versiya chiqdi!', time: '09:15', subs: 1200 },
-                { type: 'bot', name: 'MR Bot', msg: 'Salom! Men yordamchi botman', time: '08:00', verified: true }
-            ],
-            chats: [
-                { type: 'chat', name: 'Demo User', msg: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
-                { type: 'chat', name: 'Fazlulloh', msg: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true }
-            ],
-            groups: [
-                { type: 'group', name: 'Dasturchilar', msg: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 }
-            ],
-            channels: [
-                { type: 'channel', name: 'MR GRAM', msg: 'Yangi versiya chiqdi!', time: '09:15', subs: 1200 }
-            ],
-            bots: [
-                { type: 'bot', name: 'MR Bot', msg: 'Salom! Men yordamchi botman', time: '08:00', verified: true }
-            ]
-        };
-        renderContent(data[tabId] || data.all);
-    }
-    
-    function renderContent(items) {
-        if (!contentList) return;
-        
-        contentList.innerHTML = items.map(item => {
-            const av = item.type === 'group' ? '👥' : (item.type === 'channel' ? '📢' : (item.type === 'bot' ? '🤖' : MRGRAM.ui.getInitials(item.name)));
-            const badge = item.type === 'group' ? `<span class="item-badge">${item.members} a'zo</span>` 
-                : (item.type === 'channel' ? `<span class="item-badge">${MRGRAM.ui.formatNumber(item.subs)}</span>` 
-                : (item.verified ? '<span class="item-badge verified">✓</span>' : ''));
-            const status = (item.type === 'chat' || item.type === 'bot') ? `<span class="item-status ${item.online ? 'online' : ''}"></span>` : '';
-            const unread = item.unread ? `<span class="unread-badge">${item.unread}</span>` : '';
-            
-            return `<div class="list-item" data-name="${item.name}">
-                <div class="item-avatar ${item.type}">${av}</div>
-                <div class="item-info">
-                    <div class="item-header">
-                        <span class="item-name">${item.name}</span>${badge}
-                        <span class="item-time">${item.time}</span>
-                    </div>
-                    <div class="item-message">${item.msg}</div>
-                    <div class="item-meta">${status}${unread}</div>
-                </div>
-            </div>`;
-        }).join('');
-        
-        contentList.querySelectorAll('.list-item').forEach(i => {
-            i.addEventListener('click', () => MRGRAM.ui.showToast(`${i.dataset.name} ochildi (demo)`));
+    const burgerMenu = document.getElementById('burgerMenu');
+    const burgerOverlay = document.getElementById('burgerOverlay');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const themeToggle = document.getElementById('themeToggle');
+    const toast = document.getElementById('toast');
+    const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('messageInput');
+    const messagesContainer = document.getElementById('messagesContainer');
+
+    const demoChats = [
+        { name: 'Fazlulloh', msg: 'MRgram zo\'r ishlayapti!', time: '12:34', unread: 2, online: true },
+        { name: 'Dasturchilar', msg: 'Yangi loyiha haqida', time: '14:20', unread: 5 },
+        { name: 'MRgram Yangiliklari', msg: 'Yangi versiya chiqdi!', time: '09:15' },
+        { name: 'Ali', msg: 'Ko\'rishguncha!', time: 'Kecha' },
+        { name: 'Bot', msg: 'Salom! Men yordamchi botman', time: '08:00' }
+    ];
+
+    // ========== RESIZER ==========
+    let isResizing = false, startX, startWidth;
+
+    if (resizer) {
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = sidebar.offsetWidth;
+            resizer.classList.add('resizing');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
         });
     }
-    
-    // ========== USER ==========
-    function loadUser() {
-        const u = MRGRAM.user.get();
-        if (u) {
-            const n = document.getElementById('sidebarName');
-            const un = document.getElementById('sidebarUsername');
-            if (n) n.textContent = u.name || 'Foydalanuvchi';
-            if (un) un.textContent = '@' + (u.username || 'user');
-        }
-    }
-    
-    // ========== THEME ==========
-    function updateThemeText() {
-        const isDark = MRGRAM.theme.get() === 'dark';
-        const text = isDark ? 'Light mode' : 'Dark mode';
-        if (themeToggleDesktop) themeToggleDesktop.querySelector('span').textContent = text;
-        if (themeToggleMobile) themeToggleMobile.querySelector('span').textContent = text;
-    }
-    
-    // ========== EVENT LISTENERS ==========
-    menuBtn?.addEventListener('click', openSidebar);
-    sidebarOverlay?.addEventListener('click', closeSidebar);
-    searchBtn?.addEventListener('click', () => MRGRAM.ui.showToast('🔍 Qidiruv (demo)'));
-    
-    tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
-    
-    themeToggleDesktop?.addEventListener('click', () => { MRGRAM.theme.toggle(); updateThemeText(); });
-    themeToggleMobile?.addEventListener('click', () => { MRGRAM.theme.toggle(); updateThemeText(); closeSidebar(); });
-    
-    logoutBtns.forEach(btn => {
-        btn?.addEventListener('click', () => { if (confirm('Chiqishni xohlaysizmi?')) MRGRAM.user.logout(); });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        let newWidth = startWidth + (e.clientX - startX);
+        newWidth = Math.max(280, Math.min(500, newWidth));
+        sidebar.style.width = newWidth + 'px';
     });
+
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            if (resizer) resizer.classList.remove('resizing');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
+    });
+
+    // ========== TOAST ==========
+    function showToast(msg, dur = 2000) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), dur);
+    }
+
+    // ========== BURGER MENU ==========
+    function openBurgerMenu() {
+        if (burgerMenu) burgerMenu.classList.add('show');
+        if (burgerOverlay) burgerOverlay.classList.add('show');
+    }
+
+    function closeBurgerMenu() {
+        if (burgerMenu) burgerMenu.classList.remove('show');
+        if (burgerOverlay) burgerOverlay.classList.remove('show');
+    }
+
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= 768) {
+                if (mobileMenu) mobileMenu.classList.add('show');
+                if (mobileOverlay) mobileOverlay.classList.add('show');
+            } else {
+                openBurgerMenu();
+            }
+        });
+    }
+
+    if (burgerOverlay) burgerOverlay.addEventListener('click', closeBurgerMenu);
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', () => {
+            if (mobileMenu) mobileMenu.classList.remove('show');
+            if (mobileOverlay) mobileOverlay.classList.remove('show');
+        });
+    }
+
+    // Theme toggle
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            if (sunIcon) sunIcon.style.display = state.theme === 'dark' ? 'block' : 'none';
+            if (moonIcon) moonIcon.style.display = state.theme === 'light' ? 'block' : 'none';
+            showToast(`${state.theme === 'dark' ? 'Tungi' : 'Kunduzgi'} rejim`);
+        });
+    }
+
+    // ========== RENDER CHATS ==========
+    function renderChats() {
+        if (!chatList) return;
+        chatList.innerHTML = demoChats.map((c, i) => `
+            <div class="chat-item" data-name="${c.name}" data-avatar-color="${i}">
+                <div class="chat-avatar-list">${c.name[0]}</div>
+                <div class="chat-content">
+                    <div class="chat-row"><span class="chat-name">${c.name}</span><span class="chat-time">${c.time}</span></div>
+                    <div class="chat-last-msg">${c.msg}</div>
+                    <div class="chat-meta">
+                        ${c.online ? '<span class="chat-status"></span>' : ''}
+                        ${c.unread ? `<span class="chat-unread">${c.unread}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.chat-item').forEach(el => {
+            el.addEventListener('click', () => openChat(el.dataset.name));
+        });
+    }
+
+    function openChat(name) {
+        state.activeChat = name;
+        if (chatTitle) chatTitle.textContent = name;
+        if (chatSubtitle) chatSubtitle.textContent = 'oxirgi ko\'rish yaqinda';
+        
+        document.querySelectorAll('.chat-item').forEach(c => c.classList.remove('active'));
+        const active = Array.from(document.querySelectorAll('.chat-item')).find(c => c.dataset.name === name);
+        if (active) active.classList.add('active');
+
+        if (window.innerWidth <= 768) {
+            if (appContainer) appContainer.classList.add('mobile-chat-active');
+        }
+
+        if (messagesContainer) {
+            messagesContainer.innerHTML = `<div class="message-placeholder"><span>${name} bilan suhbat</span></div>`;
+        }
+        showToast(`${name} ochildi`);
+        closeBurgerMenu();
+    }
+
+    function closeChat() {
+        if (window.innerWidth <= 768) {
+            if (appContainer) appContainer.classList.remove('mobile-chat-active');
+        }
+        state.activeChat = null;
+    }
+
+    function sendMessage() {
+        const text = messageInput ? messageInput.value.trim() : '';
+        if (!text) return;
+        if (!state.activeChat) { showToast('Avval chat tanlang'); return; }
+        const msg = document.createElement('div');
+        msg.className = 'message-out';
+        msg.textContent = text;
+        if (messagesContainer) {
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        if (messageInput) messageInput.value = '';
+    }
+
+    // ========== EVENT LISTENERS ==========
+    if (backBtn) backBtn.addEventListener('click', closeChat);
+    if (fabBtn) fabBtn.addEventListener('click', () => showToast('Yangi xabar'));
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (messageInput) {
+        messageInput.addEventListener('keypress', e => { 
+            if (e.key === 'Enter') sendMessage(); 
+        });
+    }
+
+    // Menu item click
+    document.querySelectorAll('.burger-item, .menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const href = item.getAttribute('href');
+            if (href && href !== '#' && !href.includes('logout')) {
+                e.preventDefault();
+                showToast(`${item.querySelector('span')?.textContent || 'Menyu'} ochilmoqda...`);
+                setTimeout(() => { window.location.href = href; }, 500);
+            }
+            closeBurgerMenu();
+            if (mobileMenu) mobileMenu.classList.remove('show');
+            if (mobileOverlay) mobileOverlay.classList.remove('show');
+        });
+    });
+
+    // Logout
+    const logout = () => { 
+        if (confirm('Chiqish?')) { 
+            localStorage.clear(); 
+            location.href = '../'; 
+        } 
+    };
     
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
-    
-    // ========== INIT ==========
-    MRGRAM.ui.setPageTitle('Bosh sahifa');
-    loadUser();
-    updateThemeText();
-    switchTab(localStorage.getItem('mrgram_active_tab') || 'all');
-    
-    console.log('✅ Home page ready!');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (mobileMenu) mobileMenu.classList.remove('show');
+            if (mobileOverlay) mobileOverlay.classList.remove('show');
+            logout();
+        });
+    }
+
+    // Tablar
+    document.querySelectorAll('.desktop-tab, .tab').forEach(t => {
+        t.addEventListener('click', function() {
+            const parent = this.parentElement;
+            parent.querySelectorAll('.desktop-tab, .tab').forEach(tb => tb.classList.remove('active'));
+            this.classList.add('active');
+            showToast(`${this.textContent} filtri`);
+        });
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            if (appContainer) appContainer.classList.remove('mobile-chat-active');
+            if (mobileMenu) mobileMenu.classList.remove('show');
+            if (mobileOverlay) mobileOverlay.classList.remove('show');
+        }
+    });
+
+    // ESC tugmasi
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeBurgerMenu();
+            if (mobileMenu) mobileMenu.classList.remove('show');
+            if (mobileOverlay) mobileOverlay.classList.remove('show');
+        }
+    });
+
+    renderChats();
 })();
