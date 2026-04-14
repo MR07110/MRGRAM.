@@ -1,273 +1,138 @@
-// home/script.js - Tablar logikasi (yangilangan)
+// home/script.js - MRGRAM Home Logic | Full Responsive
 
 (function() {
     'use strict';
     
     // ========== ELEMENTLAR ==========
-    const tabsWrapper = document.querySelector('.tabs-wrapper');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
     const tabs = document.querySelectorAll('.tab');
     const contentList = document.getElementById('contentList');
+    const searchBtn = document.getElementById('searchBtn');
+    const themeToggleDesktop = document.getElementById('themeToggleDesktop');
+    const themeToggleMobile = document.getElementById('themeToggleMobile');
+    const logoutBtns = [document.getElementById('logoutBtnDesktop'), document.getElementById('logoutBtnMobile')];
     
-    // ========== STATE ==========
     let currentTab = 'all';
     
-    // ========== SCROLL INDIKATOR ==========
-    function createScrollIndicators() {
-        const container = document.querySelector('.tabs-container');
-        if (!container) return;
-        
-        // Left indicator
-        const leftIndicator = document.createElement('div');
-        leftIndicator.className = 'tabs-scroll-indicator left';
-        leftIndicator.style.opacity = '0';
-        
-        // Right indicator
-        const rightIndicator = document.createElement('div');
-        rightIndicator.className = 'tabs-scroll-indicator';
-        rightIndicator.style.opacity = '0';
-        
-        container.style.position = 'relative';
-        container.appendChild(leftIndicator);
-        container.appendChild(rightIndicator);
-        
-        return { leftIndicator, rightIndicator };
+    // ========== SIDEBAR ==========
+    function openSidebar() {
+        mobileSidebar?.classList.add('open');
+        sidebarOverlay?.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
     
-    function updateScrollIndicators() {
-        if (!tabsWrapper) return;
-        
-        const leftIndicator = document.querySelector('.tabs-scroll-indicator.left');
-        const rightIndicator = document.querySelector('.tabs-scroll-indicator:not(.left)');
-        
-        if (!leftIndicator || !rightIndicator) return;
-        
-        const canScrollLeft = tabsWrapper.scrollLeft > 0;
-        const canScrollRight = tabsWrapper.scrollLeft < (tabsWrapper.scrollWidth - tabsWrapper.clientWidth - 5);
-        
-        leftIndicator.style.opacity = canScrollLeft ? '1' : '0';
-        rightIndicator.style.opacity = canScrollRight ? '1' : '0';
+    function closeSidebar() {
+        mobileSidebar?.classList.remove('open');
+        sidebarOverlay?.classList.remove('active');
+        document.body.style.overflow = '';
     }
     
     // ========== TABLAR ==========
     function switchTab(tabId) {
         currentTab = tabId;
-        
-        // Tab aktivligini yangilash
-        tabs.forEach(tab => {
-            const isActive = tab.dataset.tab === tabId;
-            tab.classList.toggle('active', isActive);
-            
-            // Aktiv tabni ko'rinadigan qilish
-            if (isActive) {
-                scrollToTab(tab);
-            }
-        });
-        
-        // Kontentni yangilash
+        tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
         loadContent(tabId);
-        
-        // Saqlash
         localStorage.setItem('mrgram_active_tab', tabId);
     }
     
-    function scrollToTab(tab) {
-        if (!tabsWrapper || !tab) return;
-        
-        const tabRect = tab.getBoundingClientRect();
-        const wrapperRect = tabsWrapper.getBoundingClientRect();
-        
-        // Tab to'liq ko'rinadigan qilish
-        if (tabRect.left < wrapperRect.left) {
-            tabsWrapper.scrollLeft -= (wrapperRect.left - tabRect.left) - 16;
-        } else if (tabRect.right > wrapperRect.right) {
-            tabsWrapper.scrollLeft += (tabRect.right - wrapperRect.right) + 16;
-        }
-        
-        updateScrollIndicators();
-    }
-    
-    // ========== KONTENT YUKLASH ==========
+    // ========== KONTENT ==========
     function loadContent(tabId) {
-        if (!contentList) return;
-        
-        const demoData = {
+        const data = {
             all: [
-                { type: 'chat', name: 'Demo User', message: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
-                { type: 'chat', name: 'Fazlulloh', message: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true },
-                { type: 'group', name: 'Dasturchilar', message: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 },
-                { type: 'channel', name: 'MR GRAM Yangiliklari', message: 'Yangi versiya chiqdi!', time: '09:15', subscribers: 1200 },
-                { type: 'chat', name: 'Ali', message: 'Ko\'rishguncha!', time: 'Dushanba', unread: 0, online: false },
-                { type: 'bot', name: 'MR Bot', message: 'Salom! Men yordamchi botman', time: '08:00', verified: true }
+                { type: 'chat', name: 'Demo User', msg: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
+                { type: 'chat', name: 'Fazlulloh', msg: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true },
+                { type: 'group', name: 'Dasturchilar', msg: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 },
+                { type: 'channel', name: 'MR GRAM', msg: 'Yangi versiya chiqdi!', time: '09:15', subs: 1200 },
+                { type: 'bot', name: 'MR Bot', msg: 'Salom! Men yordamchi botman', time: '08:00', verified: true }
             ],
             chats: [
-                { type: 'chat', name: 'Demo User', message: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
-                { type: 'chat', name: 'Fazlulloh', message: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true },
-                { type: 'chat', name: 'Ali', message: 'Ko\'rishguncha!', time: 'Dushanba', unread: 0, online: false }
+                { type: 'chat', name: 'Demo User', msg: 'Salom! Qalaysan?', time: '12:34', unread: 2, online: true },
+                { type: 'chat', name: 'Fazlulloh', msg: 'MRGRAM zo\'r ishlayapti!', time: 'Kecha', unread: 0, online: true }
             ],
             groups: [
-                { type: 'group', name: 'Dasturchilar', message: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 },
-                { type: 'group', name: 'Geymerlar', message: 'Bugun oqshom o\'ynaymizmi?', time: 'Kecha', members: 89, unread: 0 }
+                { type: 'group', name: 'Dasturchilar', msg: 'Yangi loyiha haqida', time: '14:20', members: 156, unread: 5 }
             ],
             channels: [
-                { type: 'channel', name: 'MR GRAM Yangiliklari', message: 'Yangi versiya chiqdi!', time: '09:15', subscribers: 1200 },
-                { type: 'channel', name: 'Texnologiya', message: 'AI trendlari 2026', time: 'Kecha', subscribers: 3400 }
+                { type: 'channel', name: 'MR GRAM', msg: 'Yangi versiya chiqdi!', time: '09:15', subs: 1200 }
             ],
             bots: [
-                { type: 'bot', name: 'MR Bot', message: 'Salom! Men yordamchi botman', time: '08:00', verified: true },
-                { type: 'bot', name: 'Tarjimon Bot', message: 'Matn tarjima qilish uchun yuboring', time: 'Kecha', verified: true }
+                { type: 'bot', name: 'MR Bot', msg: 'Salom! Men yordamchi botman', time: '08:00', verified: true }
             ]
         };
-        
-        const items = demoData[tabId] || demoData.all;
-        renderContent(items);
+        renderContent(data[tabId] || data.all);
     }
     
     function renderContent(items) {
         if (!contentList) return;
         
-        let html = '';
-        
-        items.forEach(item => {
-            const avatarContent = item.type === 'group' ? '👥' : 
-                                 (item.type === 'channel' ? '📢' : 
-                                 (item.type === 'bot' ? '🤖' : 
-                                 MRGRAM.ui.getInitials(item.name)));
+        contentList.innerHTML = items.map(item => {
+            const av = item.type === 'group' ? '👥' : (item.type === 'channel' ? '📢' : (item.type === 'bot' ? '🤖' : MRGRAM.ui.getInitials(item.name)));
+            const badge = item.type === 'group' ? `<span class="item-badge">${item.members} a'zo</span>` 
+                : (item.type === 'channel' ? `<span class="item-badge">${MRGRAM.ui.formatNumber(item.subs)}</span>` 
+                : (item.verified ? '<span class="item-badge verified">✓</span>' : ''));
+            const status = (item.type === 'chat' || item.type === 'bot') ? `<span class="item-status ${item.online ? 'online' : ''}"></span>` : '';
+            const unread = item.unread ? `<span class="unread-badge">${item.unread}</span>` : '';
             
-            const avatarClass = `item-avatar ${item.type}`;
-            
-            const badgeHtml = item.type === 'group' 
-                ? `<span class="item-badge">${item.members} a'zo</span>`
-                : (item.type === 'channel' 
-                    ? `<span class="item-badge">${MRGRAM.ui.formatNumber(item.subscribers)} obuna</span>`
-                    : (item.type === 'bot' && item.verified 
-                        ? `<span class="item-badge verified">✓</span>`
-                        : ''));
-            
-            const statusHtml = (item.type === 'chat' || item.type === 'bot')
-                ? `<span class="item-status ${item.online ? 'online' : ''}"></span>`
-                : '';
-            
-            html += `
-                <div class="list-item" data-type="${item.type}" data-name="${item.name}">
-                    <div class="${avatarClass}">${avatarContent}</div>
-                    <div class="item-info">
-                        <div class="item-header">
-                            <span class="item-name">${item.name}</span>
-                            ${badgeHtml}
-                            <span class="item-time">${item.time}</span>
-                        </div>
-                        <div class="item-message">${item.message}</div>
-                        <div class="item-meta">
-                            ${statusHtml}
-                            ${item.unread ? `<span class="unread-badge">${item.unread}</span>` : ''}
-                        </div>
+            return `<div class="list-item" data-name="${item.name}">
+                <div class="item-avatar ${item.type}">${av}</div>
+                <div class="item-info">
+                    <div class="item-header">
+                        <span class="item-name">${item.name}</span>${badge}
+                        <span class="item-time">${item.time}</span>
                     </div>
+                    <div class="item-message">${item.msg}</div>
+                    <div class="item-meta">${status}${unread}</div>
                 </div>
-            `;
-        });
+            </div>`;
+        }).join('');
         
-        contentList.innerHTML = html;
-        
-        // Elementlarga event qo'shish
-        contentList.querySelectorAll('.list-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const type = item.dataset.type;
-                const name = item.dataset.name;
-                MRGRAM.ui.showToast(`${name} ochildi (demo)`, 'info');
-            });
+        contentList.querySelectorAll('.list-item').forEach(i => {
+            i.addEventListener('click', () => MRGRAM.ui.showToast(`${i.dataset.name} ochildi (demo)`));
         });
     }
     
-    // ========== TAB QO'SHISH (DINAMIK) ==========
-    function addTab(tabId, tabName) {
-        if (!tabsWrapper) return;
-        
-        // Tab mavjudligini tekshirish
-        if (document.querySelector(`.tab[data-tab="${tabId}"]`)) return;
-        
-        const newTab = document.createElement('button');
-        newTab.className = 'tab';
-        newTab.dataset.tab = tabId;
-        newTab.textContent = tabName;
-        
-        newTab.addEventListener('click', () => switchTab(tabId));
-        
-        tabsWrapper.appendChild(newTab);
-        
-        // Tabs ro'yxatini yangilash
-        window.tabs = document.querySelectorAll('.tab');
+    // ========== USER ==========
+    function loadUser() {
+        const u = MRGRAM.user.get();
+        if (u) {
+            const n = document.getElementById('sidebarName');
+            const un = document.getElementById('sidebarUsername');
+            if (n) n.textContent = u.name || 'Foydalanuvchi';
+            if (un) un.textContent = '@' + (u.username || 'user');
+        }
+    }
+    
+    // ========== THEME ==========
+    function updateThemeText() {
+        const isDark = MRGRAM.theme.get() === 'dark';
+        const text = isDark ? 'Light mode' : 'Dark mode';
+        if (themeToggleDesktop) themeToggleDesktop.querySelector('span').textContent = text;
+        if (themeToggleMobile) themeToggleMobile.querySelector('span').textContent = text;
     }
     
     // ========== EVENT LISTENERS ==========
-    function initEventListeners() {
-        // Tab scroll
-        tabsWrapper?.addEventListener('scroll', () => {
-            updateScrollIndicators();
-        });
-        
-        // Tablar
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.dataset.tab;
-                switchTab(tabId);
-            });
-        });
-        
-        // Window resize
-        window.addEventListener('resize', MRGRAM.ui.debounce(() => {
-            updateScrollIndicators();
-            
-            // Aktiv tabni qayta ko'rsatish
-            const activeTab = document.querySelector('.tab.active');
-            if (activeTab) {
-                scrollToTab(activeTab);
-            }
-        }, 100));
-        
-        // Touch events for swipe
-        let startX;
-        tabsWrapper?.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        });
-        
-        tabsWrapper?.addEventListener('touchend', (e) => {
-            if (!startX) return;
-            
-            const endX = e.changedTouches[0].clientX;
-            const diff = startX - endX;
-            
-            // Swipe left/right
-            if (Math.abs(diff) > 50) {
-                const direction = diff > 0 ? 1 : -1;
-                tabsWrapper.scrollLeft += direction * 150;
-                updateScrollIndicators();
-            }
-            
-            startX = null;
-        });
-    }
+    menuBtn?.addEventListener('click', openSidebar);
+    sidebarOverlay?.addEventListener('click', closeSidebar);
+    searchBtn?.addEventListener('click', () => MRGRAM.ui.showToast('🔍 Qidiruv (demo)'));
     
-    // ========== SAVED TAB RESTORE ==========
-    function restoreLastTab() {
-        const savedTab = localStorage.getItem('mrgram_active_tab') || 'all';
-        switchTab(savedTab);
-    }
+    tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+    
+    themeToggleDesktop?.addEventListener('click', () => { MRGRAM.theme.toggle(); updateThemeText(); });
+    themeToggleMobile?.addEventListener('click', () => { MRGRAM.theme.toggle(); updateThemeText(); closeSidebar(); });
+    
+    logoutBtns.forEach(btn => {
+        btn?.addEventListener('click', () => { if (confirm('Chiqishni xohlaysizmi?')) MRGRAM.user.logout(); });
+    });
+    
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
     
     // ========== INIT ==========
-    function init() {
-        createScrollIndicators();
-        initEventListeners();
-        restoreLastTab();
-        
-        // Qo'shimcha tablar qo'shish (ixtiyoriy)
-        // addTab('bots', 'Botlar');
-        
-        // Scroll indikatorlarni yangilash
-        setTimeout(updateScrollIndicators, 100);
-        
-        console.log('✅ Home page tabs initialized!');
-    }
+    MRGRAM.ui.setPageTitle('Bosh sahifa');
+    loadUser();
+    updateThemeText();
+    switchTab(localStorage.getItem('mrgram_active_tab') || 'all');
     
-    init();
-    
+    console.log('✅ Home page ready!');
 })();

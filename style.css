@@ -1,10 +1,11 @@
-/* style.css - MRGRAM Global Styles | 2026 Telegram Ultra-Clean */
+/* style.css - MRGRAM Global | Full Responsive | Light/Dark Mode */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;350;400;450;500;600&display=swap');
 
 :root {
     --bg: #ffffff;
     --bg-secondary: #f8f9fa;
+    --sidebar-bg: #ffffff;
     --text: #1c1c1e;
     --text-secondary: #8e8e93;
     --text-tertiary: rgba(60, 60, 67, 0.4);
@@ -17,27 +18,49 @@
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.04);
     --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.06);
-    --nav-bg: rgba(255, 255, 255, 0.8);
     --success: #34c759;
     --error: #ff3b30;
     --warning: #ff9500;
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Layout */
+    --sidebar-width: 280px;
+    --sidebar-width-mobile: 260px;
+    --header-height: 64px;
+    --container-max: 1200px;
+}
+
+/* Dark mode */
+.dark,
+[data-theme="dark"] {
+    --bg: #0f0f0f;
+    --bg-secondary: #1c1c1e;
+    --sidebar-bg: #0f0f0f;
+    --text: #ffffff;
+    --text-secondary: #8e8e93;
+    --text-tertiary: rgba(235, 235, 245, 0.4);
+    --border: rgba(235, 235, 245, 0.08);
+    --glass-bg: rgba(28, 28, 30, 0.7);
+    --glass-border: rgba(235, 235, 245, 0.06);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #000000;
+    :root:not(.light):not([data-theme="light"]) {
+        --bg: #0f0f0f;
         --bg-secondary: #1c1c1e;
+        --sidebar-bg: #0f0f0f;
         --text: #ffffff;
         --text-secondary: #8e8e93;
         --text-tertiary: rgba(235, 235, 245, 0.4);
         --border: rgba(235, 235, 245, 0.08);
         --glass-bg: rgba(28, 28, 30, 0.7);
         --glass-border: rgba(235, 235, 245, 0.06);
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
-        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.4);
-        --nav-bg: rgba(28, 28, 30, 0.8);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -59,33 +82,331 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* ========== LAYOUT ========== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    max-width: var(--container-max);
+    margin: 0 auto;
+}
+
+/* ========== SIDEBAR (Desktop - doimiy ko'rinadi) ========== */
+.app-sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-logo svg {
+    width: 36px;
+    height: 36px;
+}
+
+.sidebar-logo h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 16px 8px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+
+.sidebar-item:hover {
+    background: var(--glass-bg);
+}
+
+.sidebar-item.active {
+    background: var(--accent);
+    color: white;
+}
+
+.sidebar-item svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5;
+}
+
+.sidebar-item span {
+    font-size: 15px;
+    font-weight: 450;
+}
+
+.sidebar-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 12px 0;
+}
+
+/* ========== MAIN CONTENT ========== */
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* ========== HEADER (Mobile uchun) ========== */
+.mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(20px);
+}
+
+.mobile-header .header-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.mobile-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-header .header-title svg {
+    width: 28px;
+    height: 28px;
+}
+
+.mobile-header .header-title span {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* ========== TABLAR ========== */
+.tabs-container {
+    padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 5;
+    backdrop-filter: blur(20px);
+}
+
+.tabs-wrapper {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 40px;
+    border: 0.5px solid var(--glass-border);
+    box-shadow: var(--shadow-md);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tabs-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.tab {
+    padding: 12px 22px;
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 450;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 34px;
+    white-space: nowrap;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.tab:hover {
+    color: var(--text);
+    background: rgba(52, 183, 241, 0.08);
+}
+
+.tab.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+/* ========== KONTENT ========== */
+.content-list {
+    flex: 1;
+    padding: 12px 16px 20px;
+    overflow-y: auto;
+}
+
+/* ========== MOBILE SIDEBAR (Drawer) ========== */
+.mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.mobile-sidebar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: var(--sidebar-width-mobile);
+    height: 100vh;
+    background: var(--sidebar-bg);
+    z-index: 1001;
+    transition: left 0.3s;
+    flex-direction: column;
+    border-right: 0.5px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.mobile-sidebar.open {
+    left: 0;
+}
+
+.mobile-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Desktop (768px dan katta) */
+@media (min-width: 769px) {
+    .app-sidebar {
+        display: flex !important;
+    }
+    
+    .mobile-header {
+        display: none !important;
+    }
+    
+    .mobile-sidebar,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+    
+    .app-main .tabs-container {
+        top: 0;
+    }
+}
+
+/* Tablet va Mobile (768px dan kichik) */
+@media (max-width: 768px) {
+    .app-sidebar {
+        display: none !important;
+    }
+    
+    .mobile-header {
+        display: flex !important;
+    }
+    
+    .mobile-sidebar,
+    .mobile-sidebar-overlay {
+        display: flex;
+    }
+    
+    .app-layout {
+        max-width: 100%;
+    }
+    
+    .app-main {
+        width: 100%;
+    }
+    
+    .tabs-container {
+        top: 56px;
+    }
+}
+
+/* Mobile (480px dan kichik) */
+@media (max-width: 480px) {
+    .mobile-header {
+        padding: 8px 12px;
+    }
+    
+    .tabs-container {
+        padding: 10px 12px;
+    }
+    
+    .tab {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .content-list {
+        padding: 12px;
+    }
+}
+
 /* ========== UTILITIES ========== */
 .text-center { text-align: center; }
 .text-secondary { color: var(--text-secondary); }
 .text-tertiary { color: var(--text-tertiary); }
-.text-accent { color: var(--accent); }
-.mt-2 { margin-top: 8px; }
 .mt-4 { margin-top: 16px; }
-.mb-2 { margin-bottom: 8px; }
 .mb-4 { margin-bottom: 16px; }
-.p-4 { padding: 16px; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
-.gap-2 { gap: 8px; }
 .gap-4 { gap: 16px; }
 .w-full { width: 100%; }
-.h-full { height: 100%; }
-.relative { position: relative; }
-.fixed { position: fixed; }
-.inset-0 { inset: 0; }
-.z-10 { z-index: 10; }
-.z-50 { z-index: 50; }
-.z-100 { z-index: 100; }
-.overflow-hidden { overflow: hidden; }
-.overflow-auto { overflow: auto; }
-.rounded-full { border-radius: 9999px; }
-.transition { transition: var(--transition); }
 .cursor-pointer { cursor: pointer; }
+.transition { transition: var(--transition); }
