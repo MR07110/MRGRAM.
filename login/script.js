@@ -1,10 +1,38 @@
-// login/script.js - TO'LIQ TUZATILGAN (PAROL TASDIQLASH ISHLAYDI)
+// login/script.js - FIREBASE AUTH + SUPABASE STORAGE
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { 
+    getAuth, 
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ========== SUPABASE CONFIG ==========
+// ========== FIREBASE CONFIG ==========
+const firebaseConfig = {
+    apiKey: "AIzaSyBhzWWFFgrOH84J2RIW5o7l_8192iPtbOg",
+    authDomain: "code-vibe-df610.firebaseapp.com",
+    projectId: "code-vibe-df610",
+    storageBucket: "code-vibe-df610.firebasestorage.app",
+    messagingSenderId: "747762490655",
+    appId: "1:747762490655:web:125516814620784cf3a42a",
+    measurementId: "G-3QE6F8LWZ1",
+    databaseURL: "https://code-vibe-df610-default-rtdb.firebaseio.com"
+};
+
+// Firebase init
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ========== SUPABASE CONFIG (FAQAT MEDIA UCHUN) ==========
 const SUPABASE_URL = "https://mujoriozaxjojrgkkars.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11am9yaW96YXhqb2pyZ2trYXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjQ1MjQsImV4cCI6MjA5MDU0MDUyNH0.IiCWIT5QU06Wd7fEgRtTkG4IoC5oxyTgRAuWxRf15Zw";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const MEDIA_BUCKET = "videos";
 
 // ========== STATE ==========
 let isLoginMode = true;
@@ -29,15 +57,11 @@ const subSignup = document.getElementById('sub-signup');
 const footerLogin = document.getElementById('footer-login');
 const footerSignup = document.getElementById('footer-signup');
 
-// ========== DEBUG: ELEMENTLARNI TEKSHIRISH ==========
-console.log('📋 Elementlar tekshiruvi:');
-console.log('  - nameGroup:', !!nameGroup);
-console.log('  - confirmGroup:', !!confirmGroup);
-console.log('  - fullNameInput:', !!fullNameInput);
-console.log('  - usernameInput:', !!usernameInput);
-console.log('  - passwordInput:', !!passwordInput);
-console.log('  - confirmPasswordInput:', !!confirmPasswordInput);
-console.log('  - submitBtn:', !!submitBtn);
+// ========== USERNAME DAN EMAIL YASASH (FIREBASE UCHUN) ==========
+function usernameToEmail(username) {
+    const clean = username.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return `${clean}@mrgram.firebaseapp.com`;
+}
 
 // ========== TOAST ==========
 function showToast(message, isSuccess = false) {
@@ -84,7 +108,6 @@ function toggleForm() {
     isLoginMode = !isLoginMode;
     
     if (!isLoginMode) {
-        // REGISTER MODE
         if (nameGroup) {
             nameGroup.classList.add('active');
             nameGroup.style.maxHeight = '100px';
@@ -105,7 +128,6 @@ function toggleForm() {
         if (footerSignup) footerSignup.className = 'state-text visible-center';
         if (btnText) btnText.textContent = "RO'YXATDAN O'TISH";
     } else {
-        // LOGIN MODE
         if (nameGroup) {
             nameGroup.classList.remove('active');
             nameGroup.style.maxHeight = '0';
@@ -130,185 +152,156 @@ function toggleForm() {
     clearErrors();
 }
 
-// ========== USERNAME DAN EMAIL YASASH ==========
-function usernameToEmail(username) {
-    const clean = username.toLowerCase().replace(/[^a-z0-9]/g, '');
-    return `${clean}@mrgram.user`;
-}
-
-// ========== LOGIN ==========
+// ========== FIREBASE LOGIN ==========
 async function handleLogin(username, password) {
     try {
         setLoading(true);
         clearErrors();
         
         const email = usernameToEmail(username);
-        console.log('🔐 Login:', username, '→', email);
+        console.log('🔐 Firebase Login:', username, '→', email);
         
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
         
-        localStorage.setItem('mrgram_session', JSON.stringify(data.session));
-        localStorage.setItem('mrgram_user', JSON.stringify(data.user));
+        // Session saqlash
+        localStorage.setItem('mrgram_user', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || username,
+            photoURL: user.photoURL || '../mrgram.svg'
+        }));
         
         showToast('✅ Xush kelibsiz!', true);
         document.body.style.opacity = '0';
         document.body.style.transition = 'opacity 0.3s ease';
         
         setTimeout(() => { window.location.href = '../home/'; }, 500);
+        
     } catch (error) {
         console.error('❌ Login xatosi:', error);
-        showToast('❌ Username yoki parol noto\'g\'ri');
+        
+        let errorMsg = 'Username yoki parol noto\'g\'ri';
+        if (error.code === 'auth/user-not-found') errorMsg = 'Username topilmadi';
+        if (error.code === 'auth/wrong-password') errorMsg = 'Parol noto\'g\'ri';
+        if (error.code === 'auth/invalid-email') errorMsg = 'Username noto\'g\'ri formatda';
+        
+        showToast('❌ ' + errorMsg);
         shakeInput(usernameInput);
         shakeInput(passwordInput);
         setLoading(false);
     }
 }
 
-// ========== REGISTER (TO'LIQ TUZATILGAN) ==========
+// ========== FIREBASE REGISTER ==========
 async function handleRegister(fullName, username, password, confirmPassword) {
-    console.log('📝 Register funksiyasi chaqirildi');
-    console.log('  - Ism:', fullName);
-    console.log('  - Username:', username);
-    console.log('  - Parol:', password);
-    console.log('  - Tasdiqlash:', confirmPassword);
-    
     try {
         setLoading(true);
         clearErrors();
         
-        // 1. Ism tekshirish
+        // Validatsiya
         if (!fullName || fullName.length < 2) {
-            showToast('❌ Ism kamida 2 ta harfdan iborat bo\'lishi kerak');
+            showToast('❌ Ism kamida 2 ta harf');
             shakeInput(fullNameInput);
             setLoading(false);
             return;
         }
         
-        // 2. Username tekshirish
         if (!username || username.length < 3) {
-            showToast('❌ Username kamida 3 ta belgidan iborat bo\'lishi kerak');
+            showToast('❌ Username kamida 3 ta belgi');
             shakeInput(usernameInput);
             setLoading(false);
             return;
         }
         
-        // 3. Parol tekshirish
+        if (!/^[a-zA-Z0-9]+$/.test(username)) {
+            showToast('❌ Username faqat lotin harflar va raqamlar');
+            shakeInput(usernameInput);
+            setLoading(false);
+            return;
+        }
+        
         if (!password || password.length < 6) {
-            showToast('❌ Parol kamida 6 ta belgidan iborat bo\'lishi kerak');
+            showToast('❌ Parol kamida 6 ta belgi');
             shakeInput(passwordInput);
             setLoading(false);
             return;
         }
         
-        // 4. Parol tasdiqlash tekshirish
-        if (!confirmPassword) {
-            showToast('❌ Parolni tasdiqlang');
-            if (confirmPasswordInput) shakeInput(confirmPasswordInput);
-            setLoading(false);
-            return;
-        }
-        
-        // 5. Parollar mosligini tekshirish
         if (password !== confirmPassword) {
-            console.log('❌ Parollar mos emas:', password, '!==', confirmPassword);
-            showToast('❌ Parollar mos kelmadi. Qayta urinib ko\'ring.');
+            showToast('❌ Parollar mos kelmadi');
             shakeInput(passwordInput);
             if (confirmPasswordInput) shakeInput(confirmPasswordInput);
             setLoading(false);
             return;
         }
         
-        // 6. Email yasash va ro'yxatdan o'tish
         const email = usernameToEmail(username);
-        console.log('📧 Email generatsiya qilindi:', email);
+        console.log('📝 Firebase Register:', username, '→', email);
         
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { 
-                data: { 
-                    full_name: fullName, 
-                    username: username,
-                    avatar_url: '../mrgram.svg'
-                } 
-            }
+        // Firebase da ro'yxatdan o'tish
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Profil yangilash
+        await updateProfile(user, {
+            displayName: fullName,
+            photoURL: '../mrgram.svg'
         });
         
-        if (error) {
-            if (error.message.includes('already registered') || error.message.includes('already exists')) {
-                showToast('❌ Bu username band. Boshqa username tanlang.');
-            } else if (error.message.includes('password')) {
-                showToast('❌ Parol juda oddiy. Kuchliroq parol kiriting.');
-            } else {
-                showToast('❌ Xatolik: ' + error.message);
-            }
-            shakeInput(usernameInput);
-            setLoading(false);
-            return;
-        }
+        // Firestore ga foydalanuvchi ma'lumotlarini saqlash
+        await setDoc(doc(db, 'users', user.uid), {
+            username: username,
+            fullName: fullName,
+            email: email,
+            avatar: '../mrgram.svg',
+            createdAt: new Date().toISOString(),
+            mediaBucket: MEDIA_BUCKET
+        });
         
-        // 7. Users jadvaliga qo'shish
-        if (data.user) {
-            const { error: insertError } = await supabase.from('users').insert([{
-                id: data.user.id,
-                username: username,
-                full_name: fullName,
-                email: email,
-                avatar_url: '../mrgram.svg',
-                created_at: new Date().toISOString()
-            }]);
-            
-            if (insertError) {
-                console.warn('⚠️ Users jadvaliga qo\'shishda xatolik:', insertError);
-            }
-        }
+        console.log('✅ Firebase ga saqlandi:', user.uid);
         
-        showToast('✅ Ro\'yxatdan o\'tdingiz! Endi kirish qilishingiz mumkin.', true);
+        showToast('✅ Ro\'yxatdan o\'tdingiz! Avtomatik kirasiz...', true);
         
-        // Login formga qaytish
-        setTimeout(() => { 
-            toggleForm(); 
-            if (usernameInput) usernameInput.value = username;
-            if (passwordInput) passwordInput.value = '';
-            if (confirmPasswordInput) confirmPasswordInput.value = '';
+        setTimeout(async () => {
+            await handleLogin(username, password);
         }, 1500);
-        
-        setLoading(false);
         
     } catch (error) {
         console.error('❌ Register xatosi:', error);
-        showToast('❌ Xatolik yuz berdi. Qayta urinib ko\'ring.');
+        
+        let errorMsg = 'Xatolik yuz berdi';
+        if (error.code === 'auth/email-already-in-use') errorMsg = 'Bu username band';
+        if (error.code === 'auth/weak-password') errorMsg = 'Parol juda oddiy';
+        
+        showToast('❌ ' + errorMsg);
+        shakeInput(usernameInput);
         setLoading(false);
     }
 }
 
 // ========== SUBMIT ==========
 async function handleSubmit() {
-    console.log('🖱️ Submit tugmasi bosildi');
-    console.log('  - isLoginMode:', isLoginMode);
-    
-    // Elementlar mavjudligini tekshirish
     if (!usernameInput || !passwordInput) {
-        console.error('❌ Input elementlari topilmadi!');
-        showToast('❌ Sahifa to\'liq yuklanmagan. Sahifani yangilang.');
+        showToast('❌ Sahifa yuklanmagan');
         return;
     }
     
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
     
-    console.log('  - Username kiritildi:', username);
-    console.log('  - Parol kiritildi:', password ? '***' : '(bo\'sh)');
-    
-    // Username tekshirish
     if (!username || username.length < 3) {
-        showToast('❌ Username kamida 3 ta belgidan iborat bo\'lishi kerak');
+        showToast('❌ Username kamida 3 ta belgi');
         shakeInput(usernameInput);
         return;
     }
     
-    // Parol tekshirish
+    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+        showToast('❌ Username faqat lotin harflar va raqamlar');
+        shakeInput(usernameInput);
+        return;
+    }
+    
     if (!password) {
         showToast('❌ Parolni kiriting');
         shakeInput(passwordInput);
@@ -316,28 +309,12 @@ async function handleSubmit() {
     }
     
     if (isLoginMode) {
-        // LOGIN
         await handleLogin(username, password);
     } else {
-        // REGISTER
-        if (!fullNameInput) {
-            showToast('❌ Ism maydoni topilmadi');
-            return;
-        }
-        
+        if (!fullNameInput) return;
         const fullName = fullNameInput.value.trim();
-        
-        // CONFIRM PASSWORD - MUHIM QISM
         let confirmPassword = '';
-        if (confirmPasswordInput) {
-            confirmPassword = confirmPasswordInput.value;
-            console.log('  - Tasdiqlash paroli kiritildi:', confirmPassword ? '***' : '(bo\'sh)');
-        } else {
-            console.error('❌ confirmPasswordInput topilmadi!');
-            showToast('❌ Parol tasdiqlash maydoni topilmadi');
-            return;
-        }
-        
+        if (confirmPasswordInput) confirmPassword = confirmPasswordInput.value;
         await handleRegister(fullName, username, password, confirmPassword);
     }
 }
@@ -353,29 +330,31 @@ if (togglePasswordBtn) {
     });
 }
 
-// ========== EVENT LISTENERS ==========
-const themeBtn = document.getElementById('themeBtn');
-const toggleFormLink = document.getElementById('toggleFormLink');
-const toggleFormLink2 = document.getElementById('toggleFormLink2');
+// ========== LOGOUT (Global funksiya) ==========
+window.logout = async function() {
+    try {
+        await signOut(auth);
+        localStorage.removeItem('mrgram_user');
+        window.location.href = '../login/';
+    } catch (error) {
+        console.error('Logout xatosi:', error);
+    }
+};
 
-if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-if (toggleFormLink) toggleFormLink.addEventListener('click', toggleForm);
-if (toggleFormLink2) toggleFormLink2.addEventListener('click', toggleForm);
+// ========== EVENT LISTENERS ==========
+document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
+document.getElementById('toggleFormLink')?.addEventListener('click', toggleForm);
+document.getElementById('toggleFormLink2')?.addEventListener('click', toggleForm);
 if (submitBtn) submitBtn.addEventListener('click', handleSubmit);
 
-// Enter tugmasi
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && submitBtn && !submitBtn.disabled) {
-        submitBtn.click();
-    }
+    if (e.key === 'Enter' && submitBtn && !submitBtn.disabled) submitBtn.click();
 });
 
 // ========== BOSHLANG'ICH HOLAT ==========
 if (confirmGroup) {
     confirmGroup.style.maxHeight = '0';
     confirmGroup.style.opacity = '0';
-    confirmGroup.style.transform = 'scaleY(0.8) translateY(-10px)';
-    confirmGroup.style.marginBottom = '0';
     confirmGroup.style.visibility = 'hidden';
     confirmGroup.style.overflow = 'hidden';
 }
@@ -387,17 +366,38 @@ if (nameGroup) {
     nameGroup.style.overflow = 'hidden';
 }
 
-// ========== SESSION TEKSHIRISH ==========
-(async function checkSession() {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            console.log('✅ Session mavjud, home ga yo\'naltirilmoqda...');
+// ========== AUTH STATE TEKSHIRISH ==========
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log('✅ Firebase Auth:', user.displayName || user.email);
+        // Agar login sahifasida bo'lsa, home ga o'tish
+        if (window.location.pathname.includes('login')) {
             window.location.href = '../home/';
         }
-    } catch (error) {
-        console.error('❌ Session tekshirish xatosi:', error);
+    } else {
+        console.log('❌ Firebase Auth: Kirmagan');
     }
-})();
+});
 
-console.log('✅ MRgram Login - Tayyor!');
+// ========== SUPABASE MEDIA FUNKSIYALARI (Global) ==========
+window.uploadMedia = async function(file, folder = 'media') {
+    const fileName = `${folder}/${Date.now()}_${file.name}`;
+    
+    const { data, error } = await supabase.storage
+        .from(MEDIA_BUCKET)
+        .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false
+        });
+        
+    if (error) throw error;
+    
+    const { data: { publicUrl } } = supabase.storage
+        .from(MEDIA_BUCKET)
+        .getPublicUrl(data.path);
+        
+    return { url: publicUrl, path: data.path };
+};
+
+console.log('✅ MRgram - Firebase Auth + Supabase Storage');
+console.log('📦 Media Bucket:', MEDIA_BUCKET);

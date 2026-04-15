@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRgram - Aloqa uzildi</title>
+    <title>MRGRAM_404</title>
     <style>
         :root {
             --primary-blue: #0088cc;
@@ -17,183 +17,173 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             background: var(--bg-gradient);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            overflow: hidden;
             color: var(--text-dark);
         }
 
-        /* Glitch animatsiyasi */
-        @keyframes containerJump {
-            0%, 92%, 100% { transform: translate(0); }
-            93% { transform: translate(-3px, 2px); }
-            95% { transform: translate(3px, -2px); }
-        }
-
-        /* Asosiy konteyner */
         .error-wrapper {
-            width: 95%;
+            width: 90%;
             max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 2rem;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-        }
-
-        .status-badge {
-            background: rgba(0, 136, 204, 0.1);
-            color: var(--primary-blue);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
         }
 
         .svg-container {
             width: 100%;
-            max-width: 500px; /* Desktop uchun */
+            max-width: 400px;
+            margin-bottom: 1rem;
             animation: containerJump 4s steps(1) infinite;
         }
 
-        /* Responsive o'lchamlar */
-        @media (max-width: 768px) {
-            .svg-container { max-width: 400px; } /* Tablet */
-            .title { font-size: 24px; }
-        }
-
-        @media (max-width: 480px) {
-            .svg-container { max-width: 300px; } /* Mobile */
-            .title { font-size: 20px; }
-            .subtitle { font-size: 15px; }
-            .status-badge { font-size: 0.65rem; }
-        }
-
-        hr {
-            width: 50%;
-            border: 0;
-            border-top: 1.5px solid #ddecff;
-            margin: 2rem 0;
+        @keyframes containerJump {
+            0%, 92%, 100% { transform: translate(0,0); }
+            93% { transform: translate(-3px, 2px); }
+            95% { transform: translate(3px, -2px); }
         }
 
         .title { 
-            font-size: 2rem; 
-            font-weight: 800; 
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            font-weight: 850; 
             color: var(--primary-blue);
-            margin: 0; 
-            letter-spacing: -1px;
-            line-height: 1.2;
-        }
-
-        .error-code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: #a0b0bb;
-            margin-top: 8px;
-            display: block;
+            margin: 0.5rem 0;
         }
 
         .subtitle { 
             font-size: 1.1rem; 
-            color: var(--text-muted); 
-            margin-top: 1.5rem;
-            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            min-height: 3em;
         }
 
-        /* Ma'lumotlar bloki */
-        .tips-container {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: #8899aa;
-            text-align: left;
-            width: 100%;
-            max-width: 320px;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 15px 20px;
+        .timer-box {
+            background: rgba(0, 136, 204, 0.08);
+            padding: 15px 25px;
             border-radius: 15px;
-        }
-
-        .tips-container ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0 0;
-        }
-
-        .tips-container li {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .tips-container li::before {
-            content: "•";
+            font-size: 1rem;
             color: var(--primary-blue);
-            font-weight: bold;
-            margin-right: 10px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 136, 204, 0.1);
         }
 
         .btn-back {
             display: inline-block;
-            margin-top: 2.5rem;
-            padding: 16px 40px;
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
             background-color: var(--primary-blue);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2);
-            font-size: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 136, 204, 0.2);
         }
 
         .btn-back:hover {
             background-color: var(--hover-blue);
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.3);
         }
 
-        @media (max-width: 350px) {
-            .btn-back { padding: 12px 25px; font-size: 0.9rem; }
-        }
+        strong { color: #005580; }
     </style>
 </head>
 <body>
 
     <div class="error-wrapper">
-        <div class="status-badge">Tizim xatosi aniqlandi</div>
-
         <div class="svg-container">
-            <img src="404.svg" alt="404 Error" style="width: 100%; height: auto;">
+            <img src="404.svg" alt="404 Error" style="width: 100%;">
         </div>
         
-        <hr>
+        <h1 class="title">MANZIL TOPILMADI</h1>
+        <p class="subtitle" id="status-msg">Siz qidirgan manzil xatoga o'xshaydi.</p>
 
-        <h1 class="title">ALOQA UZILDI</h1>
-        <span class="error-code">ERROR_ID: MRGRAM_404_STUB</span>
-        
-        <p class="subtitle">
-            Siz qidirayotgan manzil koinot qa'riga singib ketgan ko'rinadi.
-        </p>
-
-        <div class="tips-container">
-            <strong>Nima qilish mumkin?</strong>
-            <ul>
-                <li>Havola yozilishini tekshiring.</li>
-                <li>Internet aloqangizni ko'ring.</li>
-                <li>Muhammadrasulga xabar bering.</li>
-            </ul>
+        <div class="timer-box" id="timer-display">
+            10 soniyadan so'ng "MRGRAM"ga qaytasiz...
         </div>
 
-        <a href="https://mrgram.vercel.app" class="btn-back">Chatlarga qaytish</a>
+        <a href="https://mrgram.vercel.app" class="btn-back">MRGRAM</a>
     </div>
 
+    <script>
+        // SMART REDIRECT DATABASE
+    const dictionary = {
+        'chats': [
+            'chat', 'cahts', 'chast', 'cvaht', 'chaat', 'shats', 'chays', 'chatz', 'vhats', 'chatsy', 
+            'chatss', 'xats', 'shat', 'chast', 'chata', 'chtes', 'chast', 'chats1', 'chays', 'cjats', 
+            'chsts', 'cgats', 'vhats', 'xhats', 'chatsq', 'chatsw', 'chatsde', 'chatss', 'chatt', 'chwt', 
+            'chatx', 'chatc', 'cyats', 'chatsu', 'chatsi', 'chatso', 'chast', 'chatzz', 'chattz', 'chataz', 
+            'chatsss', 'chatsm', 'chatsn', 'chastb', 'chataas', 'chatsss', 'chssts', 'vhats', 'c-h-a-t-s', 'chats0'
+        ],
+        
+        'channels': [
+            'channel', 'chanel', 'shannels', 'channrls', 'channals', 'channrll', 'vannels', 'chanels', 'chaneel', 'cannels', 
+            'kanallar', 'kanal', 'cannell', 'channl', 'channle', 'channal', 'chennels', 'chenel', 'chenal', 'shannel', 
+            'shannil', 'channles', 'chanells', 'channele', 'channell', 'channlss', 'channels1', 'channrl', 'xhannels', 'vhannels', 
+            'channlse', 'chaneels', 'chanenl', 'chanelll', 'channells', 'cannal', 'cannalss', 'channlels', 'chanelsz', 'chanelsq', 
+            'channals', 'chanelsw', 'chaneel', 'channale', 'channle', 'cannl', 'channels0', 'channls', 'channle', 'channells'
+        ],
+        
+        'groups': [
+            'group', 'grups', 'groops', 'grops', 'grouos', 'grouls', 'grrups', 'hroups', 'froups', 'groupp', 
+            'gurux', 'guruh', 'grupa', 'gruppa', 'groop', 'grooups', 'groupps', 'grouo', 'grrops', 'grruops', 
+            'vroups', 'troups', 'grous', 'grousp', 'groupss', 'groupps', 'grouop', 'gropus', 'gropu', 'groupe', 
+            'grouppa', 'gruup', 'gruups', 'gropps', 'groppu', 'grpups', 'grrupps', 'groyps', 'grpups', 'gropus', 
+            'grouups', 'grouls', 'grous', 'grouppz', 'groups1', 'groups0', 'grops', 'groupps', 'grups', 'grrps'
+        ],
+        
+        'settings': [
+            'setting', 'setings', 'sttings', 'seting', 'settins', 'settngs', 'drttings', 'aetings', 'settig', 'setingz', 
+            'sozlamalar', 'nastroyka', 'settng', 'settin', 'seting', 'stting', 'seetings', 'settimgs', 'setongs', 'settimgs', 
+            'settinfs', 'settinngs', 'settinngs', 'setingsz', 'settins', 'settngs', 'stings', 'sertings', 'serings', 'settinns', 
+            'settng', 'settig', 'settins', 'sttings', 'settingsq', 'settingsw', 'settingse', 'settings1', 'settings0', 'settingz', 
+            'seting', 'setingss', 'setttings', 'settinng', 'settimg', 'setinngs', 'sttngs', 'settinngs', 'settigs', 'setttings'
+        ]
+    };
+
+        const currentPath = window.location.pathname.replace('/', '').toLowerCase();
+        const display = document.getElementById('timer-display');
+        const statusMsg = document.getElementById('status-msg');
+        
+        let finalTarget = "https://mrgram.vercel.app"; // Default
+        let suggestedName = "";
+
+        // Analiz qilish
+        for (const [key, typos] of Object.entries(dictionary)) {
+            if (typos.includes(currentPath) || currentPath.startsWith(key.substring(0, 3))) {
+                finalTarget = `https://mrgram.vercel.app/${key}`;
+                suggestedName = key.charAt(0).toUpperCase() + key.slice(1);
+                break;
+            }
+        }
+
+        // Matnni yangilash
+        if (suggestedName) {
+            statusMsg.innerHTML = `Ehtimol, siz <strong>${suggestedName}</strong> bo'limiga kirmoqchi edingiz?`;
+        }
+
+        let timeLeft = 10;
+        const countdown = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                display.innerHTML = `<strong>${timeLeft}</strong> soniyadan so'ng yo'naltirilasiz...`;
+            } else {
+                display.innerText = "Ulanmoqda...";
+                clearInterval(countdown);
+                window.location.href = finalTarget;
+            }
+        }, 1000);
+
+        // 10 soniyadan keyin avtomatik o'tish
+        setTimeout(() => {
+            window.location.href = finalTarget;
+        }, 10000);
+    </script>
 </body>
 </html>
