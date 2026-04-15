@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MRgram</title>
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/mrgram.svg">
     
     <style>
@@ -25,201 +23,111 @@
             overflow: hidden;
         }
         
-        .splash-container {
-            text-align: center;
-            animation: fadeIn 0.4s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        
         .splash-logo {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 24px;
+            width: 120px;
+            height: 120px;
             animation: pulse 2s ease-in-out infinite;
-            filter: drop-shadow(0 6px 16px rgba(36, 161, 222, 0.15));
+            filter: drop-shadow(0 4px 12px rgba(36, 161, 222, 0.15));
         }
         
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-        }
-        
-        .splash-text {
-            color: #24A1DE;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            opacity: 0;
-            animation: slideUp 0.4s ease-out 0.2s forwards;
-        }
-        
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        
-        .splash-subtitle {
-            color: #999;
-            font-size: 14px;
-            margin-top: 8px;
-            opacity: 0;
-            animation: slideUp 0.4s ease-out 0.4s forwards;
-        }
-        
-        /* Progress bar - pastda */
-        .progress-container {
-            position: fixed;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 160px;
-            opacity: 0.4;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 3px;
-            background: #e8e8e8;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: #24A1DE;
-            border-radius: 3px;
-            animation: progress 2.2s ease-in-out forwards;
-        }
-        
-        @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        /* Status text */
-        .status-text {
-            position: fixed;
-            bottom: 25px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: #bbb;
-            font-size: 12px;
-            opacity: 0;
-            animation: fadeIn 0.3s ease-out 1.5s forwards;
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
 <body>
-    <div class="splash-container">
-        <img src="/mrgram.svg" alt="MRgram" class="splash-logo" id="splashLogo">
-        <div class="splash-text">MRgram</div>
-        <div class="splash-subtitle">Tez · Xavfsiz · Bepul</div>
-    </div>
-    
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
-    </div>
-    
-    <div class="status-text" id="statusText">Yuklanmoqda...</div>
+    <img src="/mrgram.svg" alt="MRgram" class="splash-logo" id="splashLogo">
 
-    <script>
+    <script type="module">
         (function() {
-            console.log('🚀 MRgram Splash - 2 sekund');
+            console.log('🚀 MRgram Splash');
             
-            const statusEl = document.getElementById('statusText');
-            let redirectTimer = null;
-            
-            // Minimal kutish vaqti - 2 sekund
-            const MIN_SPLASH_TIME = 2000;
+            const MIN_SPLASH_TIME = 1750; // 2 sekund
             const startTime = Date.now();
             
-            // Yo'naltirish funksiyasi
-            function redirectTo(target) {
-                if (statusEl) statusEl.textContent = 'Yo\'naltirilmoqda...';
-                document.body.style.opacity = '0';
-                document.body.style.transition = 'opacity 0.3s ease';
-                
-                setTimeout(() => {
-                    window.location.href = target;
-                }, 300);
-            }
-            
-            // Session tekshirish va yo'naltirish
-            async function checkSessionAndRedirect() {
+            // ========== SESSION TEKSHIRISH ==========
+            async function checkSession() {
                 try {
                     // LocalStorage dan tekshirish
                     const localUser = localStorage.getItem('mrgram_user');
-                    const localSession = localStorage.getItem('mrgram_session');
                     
-                    if (localUser || localSession) {
-                        // Session bor - home ga
-                        console.log('✅ Session topildi → Home');
-                        redirectTo('/home/');
-                    } else {
-                        // Session yo'q - login ga
-                        console.log('❌ Session yo\'q → Login');
-                        redirectTo('/login/');
-                    }
+                    // Firebase Auth tekshirish
+                    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+                    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
+                    
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBhzWWFFgrOH84J2RIW5o7l_8192iPtbOg",
+                        authDomain: "code-vibe-df610.firebaseapp.com",
+                        projectId: "code-vibe-df610",
+                        storageBucket: "code-vibe-df610.firebasestorage.app",
+                        messagingSenderId: "747762490655",
+                        appId: "1:747762490655:web:125516814620784cf3a42a"
+                    };
+                    
+                    const app = initializeApp(firebaseConfig);
+                    const auth = getAuth(app);
+                    
+                    return new Promise((resolve) => {
+                        const unsubscribe = onAuthStateChanged(auth, (user) => {
+                            unsubscribe();
+                            
+                            if (user) {
+                                localStorage.setItem('mrgram_user', JSON.stringify({
+                                    uid: user.uid,
+                                    displayName: user.displayName,
+                                    email: user.email
+                                }));
+                                resolve('home');
+                            } else {
+                                localStorage.removeItem('mrgram_user');
+                                resolve('login');
+                            }
+                        });
+                    });
                     
                 } catch (error) {
-                    console.error('Session tekshirish xatosi:', error);
-                    redirectTo('/login/');
+                    console.error('Session xatosi:', error);
+                    const localUser = localStorage.getItem('mrgram_user');
+                    return localUser ? 'home' : 'login';
                 }
             }
             
-            // 2 sekund kutish va yo'naltirish
-            function startRedirectTimer() {
+            // ========== YO'NALTIRISH ==========
+            async function redirect() {
+                const target = await checkSession();
                 const elapsed = Date.now() - startTime;
                 const remaining = Math.max(0, MIN_SPLASH_TIME - elapsed);
                 
-                if (statusEl) {
-                    statusEl.textContent = 'Tayyorlanmoqda...';
-                }
-                
-                redirectTimer = setTimeout(() => {
-                    checkSessionAndRedirect();
+                setTimeout(() => {
+                    console.log(`📍 Yo'naltirilmoqda: /${target}/`);
+                    document.body.style.opacity = '0';
+                    document.body.style.transition = 'opacity 0.2s ease';
+                    
+                    setTimeout(() => {
+                        window.location.href = target === 'home' ? '/home/' : '/login/';
+                    }, 200);
+                    
                 }, remaining);
             }
             
             // Logo yuklanishini kutish
             const logo = document.getElementById('splashLogo');
-            
             if (logo.complete) {
-                startRedirectTimer();
+                redirect();
             } else {
-                logo.onload = startRedirectTimer;
-                logo.onerror = startRedirectTimer;
+                logo.onload = redirect;
+                logo.onerror = redirect;
             }
             
-            // Maksimal kutish vaqti (5 sekund)
+            // Maksimal 4 sekund
             setTimeout(() => {
-                if (redirectTimer) {
-                    clearTimeout(redirectTimer);
-                }
-                console.log('⏰ Maksimal vaqt tugadi');
                 const localUser = localStorage.getItem('mrgram_user');
-                redirectTo(localUser ? '/home/' : '/login/');
-            }, 5000);
-            
-            // Agar foydalanuvchi bossa, tezlashtirish (ixtiyoriy)
-            let clickCount = 0;
-            document.body.addEventListener('click', () => {
-                clickCount++;
-                if (clickCount >= 3) {
-                    if (redirectTimer) clearTimeout(redirectTimer);
-                    checkSessionAndRedirect();
-                }
-            });
+                window.location.href = localUser ? '/home/' : '/login/';
+            }, 4000);
             
         })();
     </script>
 </body>
+</html>
 </html>
